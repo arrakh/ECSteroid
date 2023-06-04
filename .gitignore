@@ -30,3 +30,25 @@
 *.exe
 *.out
 *.app
+
+build
+out
+.cache
+.idea
+.vs
+.vscode
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# CLion project files
+cmake-build-*
