@@ -10,7 +10,9 @@
 #include "entt/entt.hpp"
 
 class IRenderableSystem {
+public:
     virtual void Render(entt::registry* registry, sf::RenderTarget* renderTarget) = 0;
+    virtual int GetRenderOrder() = 0;
 };
 
 

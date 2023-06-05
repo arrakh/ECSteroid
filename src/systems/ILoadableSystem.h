@@ -9,6 +9,7 @@
 #include "entt/entity/registry.hpp"
 
 class ILoadableSystem {
+public:
     virtual void Load(entt::registry* registry) = 0;
     virtual void Unload() = 0;
 };

@@ -8,6 +8,7 @@
 #include "entt/entt.hpp"
 
 class IUpdatableSystem {
+public:
     virtual void Update(entt::registry* registry) = 0;
 };
 

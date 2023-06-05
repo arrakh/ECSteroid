@@ -10,6 +10,8 @@
 class RectangleDrawSystem : public IRenderableSystem{
 public:
     void Render(entt::registry* registry, sf::RenderTarget* renderTarget) override;
+
+    int GetRenderOrder() override;
 };
 
 

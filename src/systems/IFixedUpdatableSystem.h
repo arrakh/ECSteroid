@@ -6,8 +6,11 @@
 #define CMAKESFMLPROJECT_IFIXEDUPDATABLESYSTEM_H
 
 
-class IFixedUpdatableSystem {
+#include "entt/entity/registry.hpp"
 
+class IFixedUpdatableSystem {
+public:
+    virtual void FixedUpdate(entt::registry* registry) = 0;
 };
 
 

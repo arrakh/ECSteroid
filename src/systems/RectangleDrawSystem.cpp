@@ -14,3 +14,7 @@ void RectangleDrawSystem::Render(entt::registry* registry, sf::RenderTarget* ren
         renderTarget->draw(shape.shape);
     }
 }
+
+int RectangleDrawSystem::GetRenderOrder() {
+    return 0;
+}
