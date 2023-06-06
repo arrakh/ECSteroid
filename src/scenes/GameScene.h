@@ -2,13 +2,13 @@
 // Created by Arya Rakha on 6/5/2023.
 //
 
-#ifndef CMAKESFMLPROJECT_TESTSCENE_H
-#define CMAKESFMLPROJECT_TESTSCENE_H
+#ifndef CMAKESFMLPROJECT_GAMESCENE_H
+#define CMAKESFMLPROJECT_GAMESCENE_H
 
 
 #include "Scene.h"
 
-class TestScene : public Scene {
+class GameScene : public Scene {
 protected:
     void RegisterSystems(SystemsHandler *handle) override;
 
@@ -17,7 +17,12 @@ protected:
     void OnUpdate() override;
 
     void OnFixedUpdate() override;
+
+    void OnRender(sf::RenderTarget *renderTarget) override;
+
+private:
+    sf::View gameView;
 };
 
 
-#endif //CMAKESFMLPROJECT_TESTSCENE_H
+#endif //CMAKESFMLPROJECT_GAMESCENE_H

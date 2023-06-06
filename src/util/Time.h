@@ -10,10 +10,12 @@
 class Time {
 public:
     static float deltaTime();
+    static float fixedDeltaTime();
     static void updateDeltaTime();
 
 private:
     static float dt;
+    static float fixedDtRate;
     static sf::Clock deltaClock;
 };
 

@@ -5,7 +5,7 @@
 #ifndef CMAKESFMLPROJECT_RECTANGLEDRAWSYSTEM_H
 #define CMAKESFMLPROJECT_RECTANGLEDRAWSYSTEM_H
 
-#include "IRenderableSystem.h"
+#include "core/IRenderableSystem.h"
 
 class RectangleDrawSystem : public IRenderableSystem{
 public:

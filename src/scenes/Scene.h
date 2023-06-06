@@ -6,12 +6,12 @@
 #define CMAKESFMLPROJECT_SCENE_H
 
 
-#include "../systems/SystemsHandler.h"
+#include "../systems/core/SystemsHandler.h"
 
 class Scene {
 public:
     Scene();
-    ~Scene();
+    virtual ~Scene();
     void Start();
     void Update();
     void FixedUpdate();
@@ -22,6 +22,7 @@ protected:
     virtual void OnStart() = 0;
     virtual void OnUpdate() = 0;
     virtual void OnFixedUpdate() = 0;
+    virtual void OnRender(sf::RenderTarget* renderTarget) = 0;
 
     entt::registry registry;
 

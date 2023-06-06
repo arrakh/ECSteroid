@@ -32,4 +32,5 @@ void Scene::FixedUpdate() {
 
 void Scene::Render(sf::RenderTarget *renderTarget) {
     sysHandle.RenderSystems(&registry, renderTarget);
+    OnRender(renderTarget);
 }

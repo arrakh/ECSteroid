@@ -7,25 +7,27 @@
 #include "../components/Position.h"
 #include "../components/Speed.h"
 #include "../util/Time.h"
+#include "../components/LocalPlayer.h"
+#include "../components/PhysicsBody.h"
 
 void LocalPlayerMovementSystem::Update(entt::registry* registry) {
-    Vector2 desiredPosition { 0.0f, 0.0f };
+    float direction { 0.0f };
+    float rotation { 0.0f };
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) desiredPosition.x = - 1.0f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) desiredPosition.x = 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) rotation = - 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) rotation = 1.0f;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) desiredPosition.y = - 1.0f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) desiredPosition.y = 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) direction = - 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) direction = 1.0f;
 
-    auto view = registry->view<Position, Speed>();
-    for ( auto [entity, position, speed] : view.each() ) {
-        auto finalPos = desiredPosition * (speed.value * Time::deltaTime());
-        auto newPos = position.vector + finalPos;
+    if (direction == 0.0f) return;
+    auto view = registry->view<PhysicsBody, Position, Speed, LocalPlayer>();
+    for ( auto [entity, pb, position, speed] : view.each() ) {
+        float magnitude = direction * speed.value * Time::deltaTime();
 
-        registry->patch<Position>(entity, [newPos](auto& pos){
-           pos.vector = newPos;
-        });
+        b2Vec2 forceVector = b2Vec2(cos(pb.body->GetAngle()), sin(pb.body->GetAngle()));
 
-        std::cout << "\nPlayer Position TICK " << Time::deltaTime() << " - x:" << newPos.x << " y:" << newPos.y;
+        std::cout << "Applying Force: " << magnitude << " To Player\n";
+        pb.body->ApplyForceToCenter(forceVector, true);
     }
 }

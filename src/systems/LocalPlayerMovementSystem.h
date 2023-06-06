@@ -5,7 +5,7 @@
 #ifndef CMAKESFMLPROJECT_LOCALPLAYERMOVEMENTSYSTEM_H
 #define CMAKESFMLPROJECT_LOCALPLAYERMOVEMENTSYSTEM_H
 
-#include "IUpdatableSystem.h"
+#include "core/IUpdatableSystem.h"
 
 class LocalPlayerMovementSystem : public IUpdatableSystem {
 public:
