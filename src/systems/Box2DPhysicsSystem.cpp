@@ -5,13 +5,12 @@
 #include <iostream>
 #include "Box2DPhysicsSystem.h"
 #include "../util/Time.h"
-#include "../components/CircleShape.h"
 #include "../components/Rotation.h"
 #include "../components/Position.h"
 
 
 void Box2DPhysicsSystem::Load(entt::registry *registry) {
-
+    std::cout << "WORLD GRAVITY IS " << world.GetGravity().y << "\n";
 }
 
 void Box2DPhysicsSystem::Unload() {
@@ -34,34 +33,26 @@ void Box2DPhysicsSystem::FixedUpdate(entt::registry *registry) {
 
 void Box2DPhysicsSystem::CreateBody(entt::registry *registry, entt::entity entity, PhysicsDefinition& def) {
     PhysicsBody comp;
+
+    std::cout << "Will create body def with type " << def.bodyDef.type << std::endl;
     comp.body = world.CreateBody(&def.bodyDef);
-
-    auto circleData = registry->try_get<CircleShape>(entity);
-    if (circleData != nullptr){
-        b2CircleShape* circle = new b2CircleShape();
-        circle->m_radius = circleData->radius;
-        comp.shape = circle;
-    }
-
-    // Create a fixture definition and attach the shape to it
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = comp.shape;
-    fixtureDef.userData.pointer = static_cast<std::uintptr_t>(entity);
-
-    comp.fixture = comp.body->CreateFixture(&fixtureDef);
+    comp.fixture = comp.body->CreateFixture(&def.fixtureDef);
 
     UpdateTransform(registry, entity, comp);
 
-    std::cout << "CREATED PHYSICS BODY\n";
+    std::cout << "CREATED PHYSICS BODY \n";
     registry->emplace<PhysicsBody>(entity, comp);
 }
 
 void Box2DPhysicsSystem::UpdateTransform(entt::registry *registry, entt::entity entity, PhysicsBody &comp) {
+
+    //comp.body->ApplyForceToCenter(, true);
+
     if (registry->any_of<Position>(entity)){
         registry->patch<Position>(entity, [&comp](Position& pos) {
             auto ppos = comp.body->GetPosition();
             pos.vector = Vector2 { ppos};
-            std::cout << "PHYSICS POSITION IS X: " << ppos.x << " Y: " << ppos.y << "\n";
+            //std::cout << "PHYSICS POSITION IS X: " << ppos.x << " Y: " << ppos.y << "\n";
         });
 
     }

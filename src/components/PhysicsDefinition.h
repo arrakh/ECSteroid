@@ -11,6 +11,7 @@ class PhysicsDefinition {
 public:
     b2BodyDef const bodyDef;
     b2FixtureDef const fixtureDef;
+    b2Shape* shape;
 };
 
 

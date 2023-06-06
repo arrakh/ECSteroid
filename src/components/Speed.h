@@ -6,7 +6,11 @@
 #define CMAKESFMLPROJECT_SPEED_H
 
 
-struct Speed {
+struct MoveSpeed {
+    float value;
+};
+
+struct SpinSpeed {
     float value;
 };
 

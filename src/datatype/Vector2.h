@@ -9,7 +9,7 @@
 #include <box2d/box2d.h>
 
 struct Vector2 {
-    const float B2_SCALE_FACTOR = 0.01f;
+    constexpr static const float B2_SCALE_FACTOR = 0.01f;
 
     float x, y;
 

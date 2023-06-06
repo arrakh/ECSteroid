@@ -9,7 +9,7 @@
 
 struct SFMLCircleShape {
 public:
-    sf::CircleShape shape;
+    sf::RectangleShape shape;
 };
 
 

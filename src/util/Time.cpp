@@ -9,7 +9,7 @@ float Time::deltaTime() {
 }
 
 float Time::fixedDeltaTime() {
-    return 1 / fixedDtRate;
+    return 1.f / fixedDtRate;
 }
 
 void Time::updateDeltaTime() {

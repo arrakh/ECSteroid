@@ -21,7 +21,7 @@ public:
     void Unload() override;
 
 private:
-    b2World world { b2Vec2_zero };
+    b2World world { b2Vec2{0.f, 0.f} };
 
     void CreateBody(entt::registry *registry, entt::entity entity, PhysicsDefinition& def);
     void UpdateTransform(entt::registry *registry, entt::entity entity, PhysicsBody& body);
