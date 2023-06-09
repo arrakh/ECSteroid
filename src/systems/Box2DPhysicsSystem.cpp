@@ -19,6 +19,7 @@ void Box2DPhysicsSystem::Unload() {
 
 void Box2DPhysicsSystem::FixedUpdate(entt::registry *registry) {
     world.Step(Time::fixedDeltaTime(), 6, 2);
+    world.ClearForces();
 
     registry->view<PhysicsDefinition>().each([this, registry](auto entity, PhysicsDefinition def){
         CreateBody(registry, entity, def);

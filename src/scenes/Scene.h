@@ -28,6 +28,9 @@ protected:
 
 private:
     SystemsHandler sysHandle;
+    EventMap eventMap;
+    Events::Listener eventListener { &eventMap };
+    Events::Publisher eventPublisher { &eventMap };
 };
 
 

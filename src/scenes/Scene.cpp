@@ -4,10 +4,12 @@
 
 #include "Scene.h"
 
-Scene::Scene() { }
+Scene::Scene() {
+
+}
 
 Scene::~Scene() {
-    sysHandle.UnregisterEvents(&registry);
+    sysHandle.UnregisterEvents(&registry, &eventListener);
     sysHandle.UnloadSystems();
 }
 
@@ -15,7 +17,8 @@ void Scene::Start() {
     RegisterSystems(&sysHandle);
     sysHandle.SortRenderables();
     sysHandle.LoadSystems(&registry);
-    sysHandle.RegisterEvents(&registry);
+    sysHandle.RegisterEvents(&registry, &eventListener);
+    sysHandle.InjectPublisher(&eventPublisher);
 
     OnStart();
 }

@@ -7,11 +7,12 @@
 
 
 #include "entt/entity/registry.hpp"
+#include "EventSystem.h"
 
 class IEventRegistrableSystem {
 public:
-    virtual void RegisterEvents(entt::registry* registry) = 0;
-    virtual void UnregisterEvents(entt::registry* registry) = 0;
+    virtual void RegisterEvents(entt::registry* registry, Events::Listener* listener) = 0;
+    virtual void UnregisterEvents(entt::registry* registry, Events::Listener* listener) = 0;
 };
 
 

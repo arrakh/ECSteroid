@@ -11,6 +11,8 @@
 #include "IUpdatableSystem.h"
 #include "IFixedUpdatableSystem.h"
 #include "IEventRegistrableSystem.h"
+#include "EventSystem.h"
+#include "IEventPublisherSystem.h"
 
 class SystemsHandler {
 private:
@@ -19,11 +21,13 @@ private:
     std::vector<IUpdatableSystem*> updatables;
     std::vector<IFixedUpdatableSystem*> fixedUpdatables;
     std::vector<IEventRegistrableSystem*> eventRegistrables;
+    std::vector<IEventPublisherSystem*> eventPublishers;
 
 public:
     template<typename T>
     void RegisterSystem(T *system) {
         if constexpr (std::is_base_of_v<IEventRegistrableSystem, T>) eventRegistrables.push_back(std::move(system));
+        if constexpr (std::is_base_of_v<IEventPublisherSystem, T>) eventPublishers.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IFixedUpdatableSystem, T>) fixedUpdatables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IRenderableSystem, T>) renderables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IUpdatableSystem, T>) updatables.push_back(std::move(system));
@@ -33,8 +37,9 @@ public:
     void UpdateSystems(entt::registry* registry);
     void FixedUpdateSystems(entt::registry* registry);
     void RenderSystems(entt::registry* registry, sf::RenderTarget* renderTarget);
-    void RegisterEvents(entt::registry* registry);
-    void UnregisterEvents(entt::registry* registry);
+    void RegisterEvents(entt::registry* registry, Events::Listener* listener);
+    void UnregisterEvents(entt::registry* registry, Events::Listener* listener);
+    void InjectPublisher(Events::Publisher* publisher);
     void LoadSystems(entt::registry* registry);
     void UnloadSystems();
     void SortRenderables();

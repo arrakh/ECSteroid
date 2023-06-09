@@ -6,6 +6,7 @@
 #include "LocalPlayerMovementSystem.h"
 #include "../util/Time.h"
 #include "../components/LocalPlayer.h"
+#include "../events/TestEvent.h"
 
 void LocalPlayerMovementSystem::Update(entt::registry* registry) {
     float thrust {0.0f };
@@ -16,6 +17,11 @@ void LocalPlayerMovementSystem::Update(entt::registry* registry) {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) thrust = - 1.0f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) thrust = 1.0f;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+        TestEvent e {1, thrust};
+        publisher->Publish(e);
+    }
 
     if (thrust != 0.0f) {
         auto view = registry->view<PhysicsBody, MoveSpeed, LocalPlayer>();

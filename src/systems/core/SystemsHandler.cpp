@@ -34,15 +34,15 @@ void SystemsHandler::FixedUpdateSystems(entt::registry *registry) {
     }
 }
 
-void SystemsHandler::RegisterEvents(entt::registry *registry) {
+void SystemsHandler::RegisterEvents(entt::registry *registry, Events::Listener* listener) {
     for (const auto& system : eventRegistrables) {
-        system->RegisterEvents(registry);
+        system->RegisterEvents(registry, listener);
     }
 }
 
-void SystemsHandler::UnregisterEvents(entt::registry *registry) {
+void SystemsHandler::UnregisterEvents(entt::registry *registry, Events::Listener* listener) {
     for (const auto& system : eventRegistrables) {
-        system->UnregisterEvents(registry);
+        system->UnregisterEvents(registry, listener);
     }
 }
 
@@ -50,4 +50,10 @@ void SystemsHandler::SortRenderables() {
     std::sort(renderables.begin(), renderables.end(), [](const auto& a, const auto& b) {
         return a->GetRenderOrder() < b->GetRenderOrder();
     });
+}
+
+void SystemsHandler::InjectPublisher(Events::Publisher *publisher) {
+    for (const auto& system : eventPublishers) {
+        system->OnInjectPublisher(publisher);
+    }
 }

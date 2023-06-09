@@ -6,7 +6,8 @@
 int main()
 {
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
-    window.setFramerateLimit(144);
+    window.setFramerateLimit(120);
+    window.setVerticalSyncEnabled(false);
 
     Scene* currentScene = new GameScene();
 

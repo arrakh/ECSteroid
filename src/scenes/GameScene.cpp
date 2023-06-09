@@ -7,8 +7,6 @@
 #include "../systems/LocalPlayerMovementSystem.h"
 #include "../systems/RectangleDrawSystem.h"
 #include "../components/SFMLCircleShape.h"
-#include "../components/Speed.h"
-#include "../components/Position.h"
 #include "../components/LocalPlayer.h"
 #include "../components/PhysicsDefinition.h"
 #include "../systems/Box2DPhysicsSystem.h"

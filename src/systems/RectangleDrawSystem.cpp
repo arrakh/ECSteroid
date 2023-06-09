@@ -2,6 +2,7 @@
 // Created by Arya Rakha on 6/4/2023.
 //
 
+#include <iostream>
 #include "RectangleDrawSystem.h"
 #include "../components/Position.h"
 #include "../components/SFMLCircleShape.h"
@@ -24,4 +25,16 @@ void RectangleDrawSystem::Render(entt::registry* registry, sf::RenderTarget* ren
 
 int RectangleDrawSystem::GetRenderOrder() {
     return 0;
+}
+
+void RectangleDrawSystem::RegisterEvents(entt::registry *registry, Events::Listener *listener) {
+    listener->Subscribe<TestEvent>(RectangleDrawSystem::TestFunc);
+}
+
+void RectangleDrawSystem::UnregisterEvents(entt::registry *registry, Events::Listener *listener) {
+    listener->Unsubscribe<TestEvent>(RectangleDrawSystem::TestFunc);
+}
+
+void RectangleDrawSystem::TestFunc(const TestEvent& event){
+    std::cout << "GOT EVENT v: " << event.value << " fv: " << event.fValue << std::endl;
 }
