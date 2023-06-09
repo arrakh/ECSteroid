@@ -35,13 +35,11 @@ void Box2DPhysicsSystem::FixedUpdate(entt::registry *registry) {
 void Box2DPhysicsSystem::CreateBody(entt::registry *registry, entt::entity entity, PhysicsDefinition& def) {
     PhysicsBody comp;
 
-    std::cout << "Will create body def with type " << def.bodyDef.type << std::endl;
     comp.body = world.CreateBody(&def.bodyDef);
     comp.fixture = comp.body->CreateFixture(&def.fixtureDef);
 
     UpdateTransform(registry, entity, comp);
 
-    std::cout << "CREATED PHYSICS BODY \n";
     registry->emplace<PhysicsBody>(entity, comp);
 }
 

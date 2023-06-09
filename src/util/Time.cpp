@@ -13,9 +13,16 @@ float Time::fixedDeltaTime() {
 }
 
 void Time::updateDeltaTime() {
-    dt = deltaClock.restart().asSeconds();
+    sfDt = deltaClock.restart();
+    dt = sfDt.asSeconds();
 }
 
+sf::Time Time::sfDt;
 float Time::dt = 0;
 float Time::fixedDtRate = 60.f;
+
+sf::Time Time::deltaSFTime() {
+    return sfDt;
+}
+
 sf::Clock Time::deltaClock;

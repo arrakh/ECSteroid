@@ -31,12 +31,12 @@ FetchContent_MakeAvailable(imgui)
 
 set(IMGUI_DIR ${imgui_SOURCE_DIR})
 option(IMGUI_SFML_FIND_SFML "Use find_package to find SFML" OFF)
-option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" OFF)
+option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" ON)
 
 FetchContent_MakeAvailable(imgui-sfml)
 
-add_executable(CMakeSFMLProject src/main.cpp src/components/Position.h src/components/SFMLCircleShape.h src/components/LocalPlayer.h src/systems/RectangleDrawSystem.cpp src/systems/RectangleDrawSystem.h src/systems/LocalPlayerMovementSystem.cpp src/systems/LocalPlayerMovementSystem.h src/components/Speed.h src/util/Time.cpp src/util/Time.h src/datatype/Vector2.h src/systems/core/IRenderableSystem.h src/systems/core/ILoadableSystem.h src/systems/core/IUpdatableSystem.h src/systems/core/IFixedUpdatableSystem.h src/systems/core/IEventRegistrableSystem.h src/systems/core/SystemsHandler.cpp src/systems/core/SystemsHandler.h src/scenes/Scene.cpp src/scenes/Scene.h src/scenes/GameScene.cpp src/scenes/GameScene.h src/systems/Box2DPhysicsSystem.cpp src/systems/Box2DPhysicsSystem.h src/components/Rotation.h src/components/PhysicsBody.h src/components/PhysicsDefinition.h src/systems/Box2DPhysicsContactHandler.cpp src/systems/Box2DPhysicsContactHandler.h src/systems/core/IEntityRegistry.h src/systems/core/EventSystem.h src/systems/core/IEventPublisherSystem.h src/events/TestEvent.h)
-target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics box2d EnTT)
+add_executable(CMakeSFMLProject src/main.cpp src/components/Position.h src/components/SFMLRectShape.h src/components/LocalPlayer.h src/systems/RectangleDrawSystem.cpp src/systems/RectangleDrawSystem.h src/systems/LocalPlayerMovementSystem.cpp src/systems/LocalPlayerMovementSystem.h src/components/Speed.h src/util/Time.cpp src/util/Time.h src/datatype/Vector2.h src/systems/core/IRenderableSystem.h src/systems/core/ILoadableSystem.h src/systems/core/IUpdatableSystem.h src/systems/core/IFixedUpdatableSystem.h src/systems/core/IEventRegistrableSystem.h src/systems/core/SystemsHandler.cpp src/systems/core/SystemsHandler.h src/scenes/Scene.cpp src/scenes/Scene.h src/scenes/GameScene.cpp src/scenes/GameScene.h src/systems/Box2DPhysicsSystem.cpp src/systems/Box2DPhysicsSystem.h src/components/Rotation.h src/components/PhysicsBody.h src/components/PhysicsDefinition.h src/systems/Box2DPhysicsContactHandler.cpp src/systems/Box2DPhysicsContactHandler.h src/systems/core/IEntityRegistry.h src/systems/core/EventSystem.h src/systems/core/IEventPublisherSystem.h src/events/TestEvent.h src/Application.cpp src/Application.h src/Constants.h)
+target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics box2d EnTT ImGui-SFML::ImGui-SFML)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET CMakeSFMLProject POST_BUILD

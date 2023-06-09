@@ -48,6 +48,7 @@ void
 LocalPlayerMovementSystem::UpdateRotation(entt::entity entity, PhysicsBody *pb, SpinSpeed *speed, const float direction) {
     float angleChange = direction * speed->value * Time::deltaTime();
     float newAngle = pb->body->GetAngle() + angleChange;
+    pb->body->SetAngularVelocity(0.f);
     pb->body->SetTransform(pb->body->GetPosition(), newAngle);
 
 }

@@ -5,11 +5,11 @@
 #include <iostream>
 #include "RectangleDrawSystem.h"
 #include "../components/Position.h"
-#include "../components/SFMLCircleShape.h"
+#include "../components/SFMLRectShape.h"
 #include "../components/Rotation.h"
 
 void RectangleDrawSystem::Render(entt::registry* registry, sf::RenderTarget* renderTarget) {
-    auto view = registry->view<SFMLCircleShape>();
+    auto view = registry->view<SFMLRectShape>();
 
     for (auto [entity, shape] : view.each()) {
 

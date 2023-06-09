@@ -22,6 +22,10 @@ protected:
 
 private:
     sf::View gameView;
+
+    void CreatePlayer();
+
+    void CreateAsteroid(float size, float x, float y, float rotation);
 };
 
 
