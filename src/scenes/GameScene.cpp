@@ -6,18 +6,19 @@
 #include <random>
 #include "GameScene.h"
 #include "../systems/LocalPlayerMovementSystem.h"
-#include "../systems/RectangleDrawSystem.h"
-#include "../components/SFMLRectShape.h"
+#include "../systems/SFMLRenderSystem.h"
 #include "../components/LocalPlayer.h"
 #include "../components/PhysicsDefinition.h"
 #include "../systems/Box2DPhysicsSystem.h"
 #include "imgui.h"
 #include "../Constants.h"
+#include "../components/SFMLDrawable.h"
+#include "../components/SFMLTransformable.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
     handle->RegisterSystem(new LocalPlayerMovementSystem());
-    handle->RegisterSystem(new RectangleDrawSystem());
+    handle->RegisterSystem(new SFMLRenderSystem());
 }
 
 void GameScene::OnStart() {
@@ -65,12 +66,15 @@ void GameScene::OnRender(sf::RenderTarget *renderTarget) {
 void GameScene::CreatePlayer() {
     auto player = registry.create();
 
-    SFMLRectShape shape;
-    shape.shape.setSize(Vector2(60.f, 40.f));
-    shape.shape.setOrigin(30.0f, 20.0f);
-    shape.shape.setFillColor(sf::Color{0, 0, 255});
+    sf::RectangleShape shape;
+    shape.setSize(Vector2(60.f, 40.f));
+    shape.setOrigin(30.0f, 20.0f);
+    shape.setFillColor(sf::Color{0, 0, 255});
 
-    registry.emplace<SFMLRectShape>(player, shape);
+    auto pShape = std::make_shared<sf::RectangleShape>(shape);
+
+    registry.emplace<SFMLDrawable>(player, SFMLDrawable {0, pShape});
+    registry.emplace<SFMLTransformable>(player, SFMLTransformable {pShape});
     registry.emplace<MoveSpeed>(player, MoveSpeed {100.0f});
     registry.emplace<SpinSpeed>(player, SpinSpeed {2.0f});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
@@ -98,15 +102,17 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
 
     std::cout << "Will put x: " << x << " y: " << y << std::endl;
 
-    SFMLRectShape shape;
-
     float halfSize = size/2.f;
 
-    shape.shape.setSize(Vector2(size, size));
-    shape.shape.setOrigin(halfSize, halfSize);
-    shape.shape.setFillColor(sf::Color{255, 0, 0});
+    sf::RectangleShape shape;
+    shape.setSize(Vector2(size, size));
+    shape.setOrigin(halfSize, halfSize);
+    shape.setFillColor(sf::Color{255, 0, 0});
 
-    registry.emplace<SFMLRectShape>(asteroid, shape);
+    auto pShape = std::make_shared<sf::RectangleShape>(shape);
+
+    registry.emplace<SFMLDrawable>(asteroid, SFMLDrawable {0, pShape});
+    registry.emplace<SFMLTransformable>(asteroid, SFMLTransformable {pShape});
     registry.emplace<Position>(asteroid, Position {Vector2(x, y)});
     registry.emplace<Rotation>(asteroid, Rotation {rotation});
 

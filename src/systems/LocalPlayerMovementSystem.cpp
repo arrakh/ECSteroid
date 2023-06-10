@@ -40,7 +40,7 @@ LocalPlayerMovementSystem::UpdatePosition(entt::entity entity, PhysicsBody *pb, 
 
     b2Vec2 forceVector = b2Vec2(cos(pb->body->GetAngle()) * magnitude, sin(pb->body->GetAngle()) * magnitude);
 
-    std::cout << "Applying Force x: " << forceVector.x << ", y: " << forceVector.y << " To Player\n";
+    //std::cout << "Applying Force x: " << forceVector.x << ", y: " << forceVector.y << " To Player\n";
     pb->body->ApplyForceToCenter(forceVector, true);
 }
 
