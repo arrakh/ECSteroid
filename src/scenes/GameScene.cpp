@@ -100,8 +100,6 @@ void GameScene::CreatePlayer() {
 void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
     auto asteroid = registry.create();
 
-    std::cout << "Will put x: " << x << " y: " << y << std::endl;
-
     float halfSize = size/2.f;
 
     sf::RectangleShape shape;

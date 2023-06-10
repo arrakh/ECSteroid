@@ -7,10 +7,12 @@
 #include "../util/Time.h"
 #include "../components/Rotation.h"
 #include "../components/Position.h"
+#include "../events/CollisionEvent.h"
 
 
 void Box2DPhysicsSystem::Load(entt::registry *registry) {
     std::cout << "WORLD GRAVITY IS " << world.GetGravity().y << "\n";
+    world.SetContactListener(this);
 }
 
 void Box2DPhysicsSystem::Unload() {
@@ -61,4 +63,15 @@ void Box2DPhysicsSystem::UpdateTransform(entt::registry *registry, entt::entity 
             rot.value = comp.body->GetAngle() * 180.0f / b2_pi;
         });
     }
+}
+
+void Box2DPhysicsSystem::BeginContact(b2Contact *contact) {
+    auto fixtureA = contact->GetFixtureA();
+    auto fixtureB = contact->GetFixtureB();
+
+    auto entityA = static_cast<entt::entity>(fixtureA->GetUserData().pointer);
+    auto entityB = static_cast<entt::entity>(fixtureB->GetUserData().pointer);
+
+    CollisionEvent event{entityA, entityB};
+    eventPublisher->Publish(event);
 }
