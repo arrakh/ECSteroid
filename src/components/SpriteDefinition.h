@@ -1,0 +1,14 @@
+//
+// Created by Arya Rakha on 6/11/2023.
+//
+
+#ifndef CMAKESFMLPROJECT_SPRITEDEFINITION_H
+#define CMAKESFMLPROJECT_SPRITEDEFINITION_H
+
+
+class SpriteDefinition {
+
+};
+
+
+#endif //CMAKESFMLPROJECT_SPRITEDEFINITION_H

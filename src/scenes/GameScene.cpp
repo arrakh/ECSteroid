@@ -14,11 +14,15 @@
 #include "../Constants.h"
 #include "../components/SFMLDrawable.h"
 #include "../components/SFMLTransformable.h"
+#include "../systems/SFMLSpriteSystem.h"
+#include "../systems/Box2DDebugDrawSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
     handle->RegisterSystem(new LocalPlayerMovementSystem());
     handle->RegisterSystem(new SFMLRenderSystem());
+    handle->RegisterSystem(new SFMLSpriteSystem());
+    handle->RegisterSystem(new Box2DDebugDrawSystem());
 }
 
 void GameScene::OnStart() {
@@ -51,8 +55,10 @@ void GameScene::OnStart() {
     }
 }
 
+bool showWindow = false;
+
 void GameScene::OnUpdate() {
-    ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow(&showWindow);
 }
 
 void GameScene::OnFixedUpdate() {
