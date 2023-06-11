@@ -38,3 +38,5 @@ _Last updated: 11/6/2023_
   - Can be made as services if we introduce service layer
 - Should make extension functions to convert float and angle to Box2D world floats and radians
 - Should have static Screen (or service?) class to reference width and height dynamically
+- There seems to be a lot of systems that require a definition component to construct another component (eg: Box2DPhysicsSystem, SFMLSpriteSystem, etc). There has got to be a better way.
+  - using entt's on_construct doesn't seem to be allowed (assertion failed), definitely for a good reason

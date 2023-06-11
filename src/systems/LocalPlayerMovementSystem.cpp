@@ -38,7 +38,9 @@ void
 LocalPlayerMovementSystem::UpdatePosition(entt::entity entity, PhysicsBody *pb, MoveSpeed *speed, const float direction) {
     float magnitude = direction * speed->value * Time::deltaTime();
 
-    b2Vec2 forceVector = b2Vec2(cos(pb->body->GetAngle()) * magnitude, sin(pb->body->GetAngle()) * magnitude);
+    float angleOffset = 90.f;
+    auto angle = pb->body->GetAngle() + (angleOffset * b2_pi / 180.f);
+    b2Vec2 forceVector = b2Vec2(cos(angle) * magnitude, sin(angle) * magnitude);
 
     //std::cout << "Applying Force x: " << forceVector.x << ", y: " << forceVector.y << " To Player\n";
     pb->body->ApplyForceToCenter(forceVector, true);

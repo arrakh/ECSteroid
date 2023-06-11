@@ -22,6 +22,7 @@ private:
     const std::string OD_TEXTURES_PATH = "assets/textures-on-demand";
 
     std::unordered_map<std::string, sf::Texture> textureMap;
+
 };
 
 

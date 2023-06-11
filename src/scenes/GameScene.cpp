@@ -16,6 +16,7 @@
 #include "../components/SFMLTransformable.h"
 #include "../systems/SFMLSpriteSystem.h"
 #include "../systems/Box2DDebugDrawSystem.h"
+#include "../components/Sprite.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
@@ -72,16 +73,20 @@ void GameScene::OnRender(sf::RenderTarget *renderTarget) {
 void GameScene::CreatePlayer() {
     auto player = registry.create();
 
-    sf::RectangleShape shape;
+    /*sf::RectangleShape shape;
     shape.setSize(Vector2(30.f, 16.f));
     shape.setOrigin(15.0f, 8.0f);
     shape.setFillColor(sf::Color{0, 0, 255});
 
     auto pShape = std::make_shared<sf::RectangleShape>(shape);
 
-    registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 2.f});
     registry.emplace<SFMLDrawable>(player, SFMLDrawable {0, pShape});
-    registry.emplace<SFMLTransformable>(player, SFMLTransformable {pShape});
+    registry.emplace<SFMLTransformable>(player, SFMLTransformable {pShape});*/
+
+    registry.emplace<SpriteDefinition>(player, SpriteDefinition {"playerShip1_blue", 1, -90.f, 0.3f});
+
+    registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 2.f});
+
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
     registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
