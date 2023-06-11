@@ -73,16 +73,17 @@ void GameScene::CreatePlayer() {
     auto player = registry.create();
 
     sf::RectangleShape shape;
-    shape.setSize(Vector2(60.f, 40.f));
-    shape.setOrigin(30.0f, 20.0f);
+    shape.setSize(Vector2(30.f, 16.f));
+    shape.setOrigin(15.0f, 8.0f);
     shape.setFillColor(sf::Color{0, 0, 255});
 
     auto pShape = std::make_shared<sf::RectangleShape>(shape);
 
+    registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 2.f});
     registry.emplace<SFMLDrawable>(player, SFMLDrawable {0, pShape});
     registry.emplace<SFMLTransformable>(player, SFMLTransformable {pShape});
-    registry.emplace<MoveSpeed>(player, MoveSpeed {100.0f});
-    registry.emplace<SpinSpeed>(player, SpinSpeed {2.0f});
+    registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
+    registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
     registry.emplace<Position>(player, Position {Vector2(0.0f, 0.0f)});
     registry.emplace<Rotation>(player, Rotation {0.0f});
@@ -92,7 +93,7 @@ void GameScene::CreatePlayer() {
     bodyDef.linearDamping = 1.0f;
 
     auto rect = new b2PolygonShape;
-    rect->SetAsBox(30.f * 0.01f, 20.f * 0.01f);
+    rect->SetAsBox(15.f * 0.01f, 8.f * 0.01f);
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
