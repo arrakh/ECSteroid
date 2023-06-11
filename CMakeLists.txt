@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(CMakeSFMLProject LANGUAGES CXX)
+project(ECSteroid LANGUAGES CXX)
 
 cmake_policy(SET CMP0135 NEW)
 
@@ -40,12 +40,12 @@ option(IMGUI_SFML_IMGUI_DEMO "Build imgui_demo.cpp" ON)
 
 FetchContent_MakeAvailable(imgui-sfml)
 
-add_executable(CMakeSFMLProject ${ASSET_FILES} src/main.cpp src/components/Position.h src/components/LocalPlayer.h src/systems/SFMLRenderSystem.cpp src/systems/SFMLRenderSystem.h src/systems/LocalPlayerMovementSystem.cpp src/systems/LocalPlayerMovementSystem.h src/components/Speed.h src/util/Time.cpp src/util/Time.h src/datatype/Vector2.h src/systems/core/IRenderableSystem.h src/systems/core/ILoadableSystem.h src/systems/core/IUpdatableSystem.h src/systems/core/IFixedUpdatableSystem.h src/systems/core/IEventRegistrableSystem.h src/systems/core/SystemsHandler.cpp src/systems/core/SystemsHandler.h src/scenes/Scene.cpp src/scenes/Scene.h src/scenes/GameScene.cpp src/scenes/GameScene.h src/systems/Box2DPhysicsSystem.cpp src/systems/Box2DPhysicsSystem.h src/components/Rotation.h src/components/PhysicsBody.h src/components/PhysicsDefinition.h src/systems/core/IEntityRegistry.h src/systems/core/EventSystem.h src/systems/core/IEventPublisherSystem.h src/events/TestEvent.h src/Application.cpp src/Application.h src/Constants.h src/components/SFMLDrawable.h src/components/SFMLTransformable.h src/events/CollisionEvent.h src/components/SpriteDefinition.h src/systems/SFMLSpriteSystem.cpp src/systems/SFMLSpriteSystem.h src/systems/Box2DDebugDrawSystem.cpp src/systems/Box2DDebugDrawSystem.h src/components/debug/Box2DDebug.h)
-target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics box2d EnTT ImGui-SFML::ImGui-SFML)
-target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
+add_executable(ECSteroid ${ASSET_FILES} src/main.cpp src/components/Position.h src/components/LocalPlayer.h src/systems/SFMLRenderSystem.cpp src/systems/SFMLRenderSystem.h src/systems/LocalPlayerMovementSystem.cpp src/systems/LocalPlayerMovementSystem.h src/components/Speed.h src/util/Time.cpp src/util/Time.h src/datatype/Vector2.h src/systems/core/IRenderableSystem.h src/systems/core/ILoadableSystem.h src/systems/core/IUpdatableSystem.h src/systems/core/IFixedUpdatableSystem.h src/systems/core/IEventRegistrableSystem.h src/systems/core/SystemsHandler.cpp src/systems/core/SystemsHandler.h src/scenes/Scene.cpp src/scenes/Scene.h src/scenes/GameScene.cpp src/scenes/GameScene.h src/systems/Box2DPhysicsSystem.cpp src/systems/Box2DPhysicsSystem.h src/components/Rotation.h src/components/PhysicsBody.h src/components/PhysicsDefinition.h src/systems/core/IEntityRegistry.h src/systems/core/EventSystem.h src/systems/core/IEventPublisherSystem.h src/events/TestEvent.h src/Application.cpp src/Application.h src/Constants.h src/components/SFMLDrawable.h src/components/SFMLTransformable.h src/events/CollisionEvent.h src/components/SpriteDefinition.h src/systems/SFMLSpriteSystem.cpp src/systems/SFMLSpriteSystem.h src/systems/Box2DDebugDrawSystem.cpp src/systems/Box2DDebugDrawSystem.h src/components/debug/Box2DDebug.h)
+target_link_libraries(ECSteroid PRIVATE sfml-graphics box2d EnTT ImGui-SFML::ImGui-SFML)
+target_compile_features(ECSteroid PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET CMakeSFMLProject POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:CMakeSFMLProject> $<TARGET_FILE_DIR:CMakeSFMLProject> COMMAND_EXPAND_LISTS)
+    add_custom_command(TARGET ECSteroid POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:ECSteroid> $<TARGET_FILE_DIR:ECSteroid> COMMAND_EXPAND_LISTS)
 endif()
 
-install(TARGETS CMakeSFMLProject)
+install(TARGETS ECSteroid)

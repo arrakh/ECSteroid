@@ -1,11 +1,33 @@
 # ECSTeroid
-an Asteroid game using ECS, developed using C++, EnTT, Box2D, and SFML libraries. This project was built with careful consideration of efficient and scalable design principles, while also maintaining simplicity in changing or adding new content to the game.
+an Asteroid game using ECS, developed using C++, EnTT, Box2D, and SFML libraries. This project was built with careful consideration of efficient and scalable design principles, while also maintaining code readability and simplicity in changing or adding new content to the game.
 
-## Improvement Notes
+# Features
+### Game
+To Be Added
+
+### Engine
+- Simple event system
+
+Libraries used:
+- SFML for Rendering
+- Box2D for Physics
+- EnTT for ECS
+
+# Engine Principles
+The engine is divided into 5 crucial parts: Scenes, Entities, Components, Systems, and Events.
+
+To Be Added below
+### Scenes
+### Entities
+### Components
+### Systems
+### Events
+
+# Improvement Notes
 _Last updated: 11/6/2023_
 - Serializable components for entity
 - When creating an entity, systems should take care of certain creation of components made from definition
-- Require attribute and another attribute that prevents from being added outside of systems
+- (not sure if possible) Require attribute and another attribute that prevents from being added outside of systems
 - In-game Debug tool:
   - Hierarchy viewer
   - Component inspector
