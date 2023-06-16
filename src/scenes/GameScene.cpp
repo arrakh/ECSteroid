@@ -11,12 +11,14 @@
 #include "../components/PhysicsDefinition.h"
 #include "../systems/Box2DPhysicsSystem.h"
 #include "imgui.h"
-#include "../Constants.h"
 #include "../components/SFMLDrawable.h"
 #include "../components/SFMLTransformable.h"
 #include "../systems/SFMLSpriteSystem.h"
 #include "../systems/Box2DDebugDrawSystem.h"
 #include "../components/Sprite.h"
+#include "../Application.h"
+#include "../systems/WrapAroundSystem.h"
+#include "../components/WrapAround.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
@@ -24,12 +26,13 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new SFMLRenderSystem());
     handle->RegisterSystem(new SFMLSpriteSystem());
     handle->RegisterSystem(new Box2DDebugDrawSystem());
+    handle->RegisterSystem(new WrapAroundSystem());
 }
 
 void GameScene::OnStart() {
 
-    auto width = Constants::DEFAULT_SCREEN_WIDTH_F;
-    auto height = Constants::DEFAULT_SCREEN_HEIGHT_F;
+    auto width = Application::Width;
+    auto height = Application::Height;
 
     gameView.setCenter(0.0f, 0.0f);
     gameView.setSize(width, height);
@@ -39,7 +42,7 @@ void GameScene::OnStart() {
     std::random_device dev;
     std::mt19937 rng(dev());
 
-    for (int i = 0; i < 200; ++i) {
+    for (int i = 0; i < 300; ++i) {
         std::uniform_real_distribution<float> randSize(20,50);
         float size = randSize(rng);
         float doubleSize = size * 2;
@@ -73,20 +76,11 @@ void GameScene::OnRender(sf::RenderTarget *renderTarget) {
 void GameScene::CreatePlayer() {
     auto player = registry.create();
 
-    /*sf::RectangleShape shape;
-    shape.setSize(Vector2(30.f, 16.f));
-    shape.setOrigin(15.0f, 8.0f);
-    shape.setFillColor(sf::Color{0, 0, 255});
-
-    auto pShape = std::make_shared<sf::RectangleShape>(shape);
-
-    registry.emplace<SFMLDrawable>(player, SFMLDrawable {0, pShape});
-    registry.emplace<SFMLTransformable>(player, SFMLTransformable {pShape});*/
-
     registry.emplace<SpriteDefinition>(player, SpriteDefinition {"playerShip1_blue", 1, -90.f, 0.3f});
 
     registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 2.f});
 
+    registry.emplace<WrapAround>(player, WrapAround {});
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
     registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
@@ -121,6 +115,7 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
 
     auto pShape = std::make_shared<sf::RectangleShape>(shape);
 
+    registry.emplace<WrapAround>(asteroid, WrapAround {});
     registry.emplace<SFMLDrawable>(asteroid, SFMLDrawable {0, pShape});
     registry.emplace<SFMLTransformable>(asteroid, SFMLTransformable {pShape});
     registry.emplace<Position>(asteroid, Position {Vector2(x, y)});

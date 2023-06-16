@@ -24,9 +24,9 @@ To Be Added below
 ### Events
 
 # Improvement Notes
-_Last updated: 11/6/2023_
+_Last updated: 16/6/2023_
 - Serializable components for entity
-- When creating an entity, systems should take care of certain creation of components made from definition
+- A component that is created from a definition component should live side by side with the definition
 - (not sure if possible) Require attribute and another attribute that prevents from being added outside of systems
 - In-game Debug tool:
   - Hierarchy viewer

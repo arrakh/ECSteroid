@@ -17,6 +17,8 @@ public:
     void FixedUpdate();
     void Render(sf::RenderTarget* renderTarget);
 
+    template<typename EventType> void PublishEvent(const EventType& event) { eventPublisher.Publish(event); }
+
 protected:
     virtual void RegisterSystems(SystemsHandler* handle) = 0;
     virtual void OnStart() = 0;
