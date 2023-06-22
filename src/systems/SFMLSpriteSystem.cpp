@@ -43,20 +43,28 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
         auto it = textureMap.find(def.spriteName);
         if (it == textureMap.end()) throw std::invalid_argument("Could not find texture with name " + def.spriteName);
 
-        sf::Sprite sprite {it->second};
+        auto& texture = it->second;
+        sf::Sprite sprite {texture};
 
         if (def.center){
             auto size = it->second.getSize();
             sprite.setOrigin(size.x/2.f, size.y/2.f);
         }
 
+        if (def.useCustomDimensions){
+            auto size = texture.getSize();
+            float scaleX = def.customWidth / size.x;
+            float scaleY = def.customHeight / size.y;
+            std::cout << "scale x: " << scaleX << " y: " << scaleY << std::endl;
+            sprite.setScale(scaleX, scaleY);
+        }
+
         sprite.setRotation(def.initialAngle);
-        sprite.setScale(def.initialScale, def.initialScale);
 
         auto spritePtr = std::make_shared<sf::Sprite>(sprite);
 
         registry->emplace<SFMLTransformable>(entity, SFMLTransformable { spritePtr });
-        registry->emplace<SFMLDrawable>(entity, SFMLDrawable { 0, spritePtr });
+        registry->emplace<SFMLDrawable>(entity, SFMLDrawable { def.initialOrder, spritePtr });
     }
 
     registry->clear<SpriteDefinition>();

@@ -12,8 +12,13 @@ struct SpriteDefinition {
     std::string spriteName;
     const int initialOrder = 0;
     const float initialAngle = 0.f;
-    const float initialScale = 1.f;
     const bool center = true;
+
+    const bool useCustomDimensions = false;
+    const float customWidth = 0;
+    const float customHeight = 0;
+
+    const bool tiled = false;
 };
 
 

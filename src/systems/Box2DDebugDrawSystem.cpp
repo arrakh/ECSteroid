@@ -3,11 +3,14 @@
 //
 
 #include <iostream>
+#include "imgui.h"
 #include "Box2DDebugDrawSystem.h"
 #include "../datatype/Vector2.h"
 
+bool Box2DDebugDrawSystem::shouldDraw = true;
 
 void Box2DDebugDrawSystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
+    if (!shouldDraw) return;
     auto dataView = registry->view<Box2DDebugData, PhysicsBody>();
     for (auto [entity, data, body]: dataView.each()) {
         auto pos = body.body->GetPosition();
@@ -37,12 +40,14 @@ void Box2DDebugDrawSystem::FixedUpdate(entt::registry *registry) {
         std::shared_ptr<sf::Shape> shapePtr = nullptr;
         b2CircleShape *b2Circle;
         sf::CircleShape circleShape;
-
+        float worldRadius;
 
         switch (shape->m_type) {
             case b2Shape::Type::e_circle:
                 b2Circle = dynamic_cast<b2CircleShape *>(shape);
-                circleShape.setRadius(b2Circle->m_radius / 0.01f);
+                worldRadius = b2Circle->m_radius / 0.01f;
+                circleShape.setRadius(worldRadius);
+                circleShape.setOrigin(worldRadius, worldRadius);
                 shapePtr = std::make_shared<sf::CircleShape>(circleShape);
                 break;
 
@@ -72,4 +77,18 @@ void Box2DDebugDrawSystem::FixedUpdate(entt::registry *registry) {
     }
 
     registry->clear<Box2DDebugDefinition>();
+}
+
+void Box2DDebugDrawSystem::Update(entt::registry *registry) {
+    ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_FirstUseEver);
+
+    static bool windowOpen;
+    if (!ImGui::Begin("Physics Debug Draw", &windowOpen)){
+        ImGui::End();
+        return;
+    }
+
+    ImGui::Checkbox("Draw Bounds", &shouldDraw);
+
+    ImGui::End();
 }

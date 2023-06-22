@@ -9,16 +9,18 @@
 #include "../components/debug/Box2DDebug.h"
 #include "../components/PhysicsBody.h"
 #include "core/IFixedUpdatableSystem.h"
+#include "core/IUpdatableSystem.h"
 
-class Box2DDebugDrawSystem : public IRenderableSystem, public IFixedUpdatableSystem {
+class Box2DDebugDrawSystem : public IRenderableSystem, public IFixedUpdatableSystem, public IUpdatableSystem {
 public:
     void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override;
+    int GetRenderOrder() override;
+
+    void Update(entt::registry *registry) override;
 
 private:
     void FixedUpdate(entt::registry *registry) override;
-
-public:
-    int GetRenderOrder() override;
+    static bool shouldDraw;
 };
 
 

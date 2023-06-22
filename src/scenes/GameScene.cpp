@@ -76,9 +76,12 @@ void GameScene::OnRender(sf::RenderTarget *renderTarget) {
 void GameScene::CreatePlayer() {
     auto player = registry.create();
 
-    registry.emplace<SpriteDefinition>(player, SpriteDefinition {"playerShip1_blue", 1, -90.f, 0.3f});
+    registry.emplace<SpriteDefinition>(player, SpriteDefinition {
+        .spriteName =  "playerShip1_blue", .initialOrder =  1, .initialAngle = -90.f,
+        .useCustomDimensions = true, .customWidth = 30, .customHeight = 16
+    });
 
-    registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 2.f});
+    registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 1.f});
 
     registry.emplace<WrapAround>(player, WrapAround {});
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
@@ -108,16 +111,14 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
 
     float halfSize = size/2.f;
 
-    sf::RectangleShape shape;
-    shape.setSize(Vector2(size, size));
-    shape.setOrigin(halfSize, halfSize);
-    shape.setFillColor(sf::Color{255, 0, 0});
+    registry.emplace<SpriteDefinition>(asteroid, SpriteDefinition {
+            .spriteName =  "meteorBrown_big4", .initialOrder =  0,
+            .useCustomDimensions = true, .customWidth = size, .customHeight = size
+    });
 
-    auto pShape = std::make_shared<sf::RectangleShape>(shape);
+    registry.emplace<Box2DDebugDefinition>(asteroid, Box2DDebugDefinition { sf::Color::Green, 1.f});
 
     registry.emplace<WrapAround>(asteroid, WrapAround {});
-    registry.emplace<SFMLDrawable>(asteroid, SFMLDrawable {0, pShape});
-    registry.emplace<SFMLTransformable>(asteroid, SFMLTransformable {pShape});
     registry.emplace<Position>(asteroid, Position {Vector2(x, y)});
     registry.emplace<Rotation>(asteroid, Rotation {rotation});
 
@@ -127,14 +128,14 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
     bodyDef.position = Vector2(x, y);
     bodyDef.angle = rotation * b2_pi / 180.0f;
 
-    auto rect = new b2PolygonShape;
-    rect->SetAsBox(halfSize * 0.01f, halfSize * 0.01f);
+    auto shape = new b2CircleShape;
+    shape->m_radius = size * 0.01f / 2.f;
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 0.2f;
     fixtureDef.friction = 0.1f;
-    fixtureDef.shape = rect;
+    fixtureDef.shape = shape;
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(asteroid);
 
-    registry.emplace<PhysicsDefinition>(asteroid, PhysicsDefinition {bodyDef, fixtureDef, rect});
+    registry.emplace<PhysicsDefinition>(asteroid, PhysicsDefinition {bodyDef, fixtureDef, shape});
 }
