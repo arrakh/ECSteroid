@@ -19,6 +19,8 @@ struct SpriteDefinition {
     const float customHeight = 0;
 
     const bool tiled = false;
+    const float tiledScaleX = 1.f;
+    const float tiledScaleY = 1.f;
 };
 
 

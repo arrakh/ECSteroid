@@ -37,6 +37,8 @@ void GameScene::OnStart() {
     gameView.setCenter(0.0f, 0.0f);
     gameView.setSize(width, height);
 
+    CreateBackground();
+
     CreatePlayer();
 
     std::random_device dev;
@@ -138,4 +140,15 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(asteroid);
 
     registry.emplace<PhysicsDefinition>(asteroid, PhysicsDefinition {bodyDef, fixtureDef, shape});
+}
+
+void GameScene::CreateBackground() {
+    auto bg = registry.create();
+
+    registry.emplace<Position>(bg, Position {Vector2(0, 0)});
+    registry.emplace<SpriteDefinition>(bg, SpriteDefinition {
+            .spriteName =  "darkPurple", .initialOrder =  -10000, .center = true,
+            .useCustomDimensions = true, .customWidth = Application::Width, .customHeight = Application::Height,
+            .tiled = true
+    });
 }

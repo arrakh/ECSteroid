@@ -46,18 +46,30 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
         auto& texture = it->second;
         sf::Sprite sprite {texture};
 
-        if (def.center){
-            auto size = it->second.getSize();
-            sprite.setOrigin(size.x/2.f, size.y/2.f);
+        auto size = texture.getSize();
+
+        if (def.tiled && def.useCustomDimensions){
+            float width = def.useCustomDimensions ? def.customWidth : size.x;
+            float height = def.useCustomDimensions ? def.customHeight : size.y;
+            int x = std::floor(width);
+            int y = std::floor(height);
+            sprite.setTextureRect(sf::IntRect {0, 0, x, y});
+            if (def.center) sprite.setOrigin(width/2.f, height/2.f);
+
+            texture.setRepeated(true);
+        } else {
+            if (def.center){
+                sprite.setOrigin(size.x/2.f, size.y/2.f);
+            }
+
+            if (def.useCustomDimensions){
+                float scaleX = def.customWidth / size.x;
+                float scaleY = def.customHeight / size.y;
+
+                sprite.setScale(scaleX, scaleY);
+            }
         }
 
-        if (def.useCustomDimensions){
-            auto size = texture.getSize();
-            float scaleX = def.customWidth / size.x;
-            float scaleY = def.customHeight / size.y;
-            std::cout << "scale x: " << scaleX << " y: " << scaleY << std::endl;
-            sprite.setScale(scaleX, scaleY);
-        }
 
         sprite.setRotation(def.initialAngle);
 
