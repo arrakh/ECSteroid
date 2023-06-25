@@ -19,9 +19,9 @@ typedef std::multimap<const std::type_info*, const std::function<void(const Even
 
 namespace Events {
 
-    class Listener {
+    class Subscriber {
     public:
-        Listener(EventMap* eventMap) : eventMap(eventMap){}
+        Subscriber(EventMap* eventMap) : eventMap(eventMap){}
 
         template<typename EventType>
         void Subscribe(const std::function<void(const EventType&)>& callback) {

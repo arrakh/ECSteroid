@@ -19,6 +19,11 @@
 #include "../Application.h"
 #include "../systems/WrapAroundSystem.h"
 #include "../components/WrapAround.h"
+#include "../components/ShootAbility.h"
+#include "../systems/PlayerShootSystem.h"
+#include "../systems/DebugAngleSystem.h"
+#include "../systems/BulletLifetimeSystem.h"
+#include "../systems/BulletCollisionSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
@@ -27,6 +32,9 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new SFMLSpriteSystem());
     handle->RegisterSystem(new Box2DDebugDrawSystem());
     handle->RegisterSystem(new WrapAroundSystem());
+    handle->RegisterSystem(new PlayerShootSystem());
+    handle->RegisterSystem(new BulletLifetimeSystem());
+    handle->RegisterSystem(new BulletCollisionSystem());
 }
 
 void GameScene::OnStart() {
@@ -78,26 +86,30 @@ void GameScene::OnRender(sf::RenderTarget *renderTarget) {
 void GameScene::CreatePlayer() {
     auto player = registry.create();
 
+    Vector2 size{16.f, 30.f};
+
     registry.emplace<SpriteDefinition>(player, SpriteDefinition {
-        .spriteName =  "playerShip1_blue", .initialOrder =  1, .initialAngle = -90.f,
-        .useCustomDimensions = true, .customWidth = 30, .customHeight = 16
+        .spriteName =  "playerShip1_blue", .initialOrder =  1, .initialAngle = 90.f,
+        .useCustomDimensions = true, .customWidth = size.y, .customHeight = size.x
     });
 
     registry.emplace<Box2DDebugDefinition>(player, Box2DDebugDefinition { sf::Color::Green, 1.f});
 
     registry.emplace<WrapAround>(player, WrapAround {});
-    registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
-    registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
     registry.emplace<Position>(player, Position {Vector2(0.0f, 0.0f)});
     registry.emplace<Rotation>(player, Rotation {0.0f});
+
+    registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
+    registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
+    registry.emplace<ShootAbility>(player, ShootAbility { size.x / 2.f + 6.f,  0.3f, 300.f, 1.f, 5.f });
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.linearDamping = 1.0f;
 
     auto rect = new b2PolygonShape;
-    rect->SetAsBox(15.f * 0.01f, 8.f * 0.01f);
+    rect->SetAsBox(size.x / 2.f * 0.01f, size.y / 2.f * 0.01f);
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
@@ -110,8 +122,6 @@ void GameScene::CreatePlayer() {
 
 void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
     auto asteroid = registry.create();
-
-    float halfSize = size/2.f;
 
     registry.emplace<SpriteDefinition>(asteroid, SpriteDefinition {
             .spriteName =  "meteorBrown_big4", .initialOrder =  0,

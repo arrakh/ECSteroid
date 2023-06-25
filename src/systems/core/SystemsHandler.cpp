@@ -34,15 +34,15 @@ void SystemsHandler::FixedUpdateSystems(entt::registry *registry) {
     }
 }
 
-void SystemsHandler::RegisterEvents(entt::registry *registry, Events::Listener* listener) {
+void SystemsHandler::RegisterEvents(entt::registry *registry, Events::Subscriber* listener) {
     for (const auto& system : eventRegistrables) {
-        system->RegisterEvents(registry, listener);
+        system->SubscribeEvents(registry, listener);
     }
 }
 
-void SystemsHandler::UnregisterEvents(entt::registry *registry, Events::Listener* listener) {
+void SystemsHandler::UnregisterEvents(entt::registry *registry, Events::Subscriber* listener) {
     for (const auto& system : eventRegistrables) {
-        system->UnregisterEvents(registry, listener);
+        system->UnsubscribeEvents(registry, listener);
     }
 }
 

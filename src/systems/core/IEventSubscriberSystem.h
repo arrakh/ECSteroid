@@ -9,10 +9,10 @@
 #include "entt/entity/registry.hpp"
 #include "EventSystem.h"
 
-class IEventRegistrableSystem {
+class IEventSubscriberSystem {
 public:
-    virtual void RegisterEvents(entt::registry* registry, Events::Listener* listener) = 0;
-    virtual void UnregisterEvents(entt::registry* registry, Events::Listener* listener) = 0;
+    virtual void SubscribeEvents(entt::registry* registry, Events::Subscriber* subscriber) = 0;
+    virtual void UnsubscribeEvents(entt::registry* registry, Events::Subscriber* subscriber) = 0;
 };
 
 

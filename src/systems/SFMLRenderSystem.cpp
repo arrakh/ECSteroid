@@ -24,10 +24,10 @@ void SFMLRenderSystem::ApplyTransforms(entt::registry *registry) {
     for (auto [entity, t] : view.each()) {
 
         auto posData = registry->try_get<Position>(entity);
-        if (posData != nullptr) t.transformable->setPosition(posData->vector.x, posData->vector.y);
+        if (posData != nullptr) t.transformable->setPosition(posData->vector.x + t.offsetPosition.x, posData->vector.y + t.offsetPosition.y);
 
         auto rotData = registry->try_get<Rotation>(entity);
-        if (rotData != nullptr) t.transformable->setRotation(rotData->value);
+        if (rotData != nullptr) { t.transformable->setRotation(rotData->value + t.offsetAngle); }
 
         auto id = static_cast<uintptr_t>(entity);
         auto pos = t.transformable->getPosition();

@@ -13,7 +13,6 @@ struct CollisionEvent : public Event {
 public:
     CollisionEvent(entt::entity a, entt::entity b) : a(a), b(b) {}
 
-private:
     entt::entity a;
     entt::entity b;
 };

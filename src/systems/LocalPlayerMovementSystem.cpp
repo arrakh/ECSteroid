@@ -15,8 +15,8 @@ void LocalPlayerMovementSystem::Update(entt::registry* registry) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) rotation = - 1.0f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) rotation = 1.0f;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) thrust = - 1.0f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) thrust = 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) thrust = 1.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) thrust = - 1.0f;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
         TestEvent e {1, thrust};
@@ -38,8 +38,7 @@ void
 LocalPlayerMovementSystem::UpdatePosition(entt::entity entity, PhysicsBody *pb, MoveSpeed *speed, const float direction) {
     float magnitude = direction * speed->value * Time::deltaTime();
 
-    float angleOffset = 90.f;
-    auto angle = pb->body->GetAngle() + (angleOffset * b2_pi / 180.f);
+    auto angle = pb->body->GetAngle();
     b2Vec2 forceVector = b2Vec2(cos(angle) * magnitude, sin(angle) * magnitude);
 
     //std::cout << "Applying Force x: " << forceVector.x << ", y: " << forceVector.y << " To Player\n";

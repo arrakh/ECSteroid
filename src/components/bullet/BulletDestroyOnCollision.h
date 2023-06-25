@@ -1,0 +1,14 @@
+//
+// Created by Arya Rakha on 6/25/2023.
+//
+
+#ifndef ECSTEROID_BULLETDESTROYONCOLLISION_H
+#define ECSTEROID_BULLETDESTROYONCOLLISION_H
+
+
+struct BulletDestroyOnCollision {
+
+};
+
+
+#endif //ECSTEROID_BULLETDESTROYONCOLLISION_H

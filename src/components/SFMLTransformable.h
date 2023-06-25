@@ -11,6 +11,8 @@
 class SFMLTransformable {
 public:
     std::shared_ptr<sf::Transformable> transformable;
+    float offsetAngle = 0.f;
+    Vector2 offsetPosition = Vector2(0.f, 0.f);
 };
 
 
