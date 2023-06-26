@@ -20,7 +20,7 @@ public:
     void Unload() override;
 
 private:
-    void CreateBullet(entt::registry *registry, Vector2 pos, float angle, ShootAbility data);
+    void CreateBullet(entt::entity shooter, entt::registry *registry, Vector2 pos, float angle, ShootAbility data);
 };
 
 

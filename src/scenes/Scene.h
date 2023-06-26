@@ -15,6 +15,8 @@ public:
     void Start();
     void Update();
     void FixedUpdate();
+    void FinalUpdate();
+    void LateUpdate();
     void Render(sf::RenderTarget* renderTarget);
 
     template<typename EventType> void PublishEvent(const EventType& event) { eventPublisher.Publish(event); }

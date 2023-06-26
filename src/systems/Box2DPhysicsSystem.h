@@ -11,11 +11,16 @@
 #include "../components/PhysicsDefinition.h"
 #include "../components/PhysicsBody.h"
 #include "core/IEventPublisherSystem.h"
+#include "core/IEventSubscriberSystem.h"
 #include <box2d/box2d.h>
 
-class Box2DPhysicsSystem : public IFixedUpdatableSystem, public ILoadableSystem, public IEventPublisherSystem, public b2ContactListener {
+class Box2DPhysicsSystem : public IFixedUpdatableSystem, public ILoadableSystem, public IEventPublisherSystem, public IEventSubscriberSystem, public b2ContactListener {
 public:
     void FixedUpdate(entt::registry *registry) override;
+
+    void SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
+
+    void UnsubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
 
     void BeginContact(b2Contact* contact) override;
 
@@ -27,9 +32,11 @@ public:
 private:
     b2World world { b2Vec2{0.f, 0.f} };
     Events::Publisher* eventPublisher;
+    std::vector<b2Body*> destroyQueue;
 
     void CreateBody(entt::registry *registry, entt::entity entity, PhysicsDefinition& def);
     void UpdateTransform(entt::registry *registry, entt::entity entity, PhysicsBody& body);
+    void OnBodyDestroyed(entt::registry &registry, entt::entity entity);
 };
 
 

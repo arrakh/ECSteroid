@@ -8,6 +8,7 @@
 
 #include "core/IEventSubscriberSystem.h"
 #include "../events/CollisionEvent.h"
+#include "core/IEventPublisherSystem.h"
 
 class BulletCollisionSystem : public IEventSubscriberSystem {
 public:
@@ -18,7 +19,7 @@ public:
 private:
     void OnCollision(entt::registry *registry, const CollisionEvent& event);
 
-    void HandlePossibleBulletCollision(entt::registry *registry, entt::entity possibleBullet);
+    void HandlePossibleBulletCollision(entt::registry *registry, entt::entity possibleBullet, const entt::entity other);
 };
 
 

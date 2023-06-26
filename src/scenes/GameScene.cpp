@@ -24,6 +24,8 @@
 #include "../systems/DebugAngleSystem.h"
 #include "../systems/BulletLifetimeSystem.h"
 #include "../systems/BulletCollisionSystem.h"
+#include "../systems/DestroyOnZeroHealthSystem.h"
+#include "../components/Health.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new Box2DPhysicsSystem());
@@ -35,6 +37,7 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new PlayerShootSystem());
     handle->RegisterSystem(new BulletLifetimeSystem());
     handle->RegisterSystem(new BulletCollisionSystem());
+    handle->RegisterSystem(new DestroyOnZeroHealthSystem());
 }
 
 void GameScene::OnStart() {
@@ -102,7 +105,11 @@ void GameScene::CreatePlayer() {
 
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
     registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
-    registry.emplace<ShootAbility>(player, ShootAbility { size.x / 2.f + 6.f,  0.3f, 300.f, 1.f, 5.f });
+
+    registry.emplace<ShootAbility>(player, ShootAbility {
+        .startDistance = size.x / 2.f + 6.f,  .cooldown = 0.2f,
+        .bulletSpeed = 400.f, .bulletLifetime = 1.5f, .bulletDamage = 15.f
+    });
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
@@ -129,6 +136,8 @@ void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
     });
 
     registry.emplace<Box2DDebugDefinition>(asteroid, Box2DDebugDefinition { sf::Color::Green, 1.f});
+
+    registry.emplace<Health>(asteroid, Health{100.f});
 
     registry.emplace<WrapAround>(asteroid, WrapAround {});
     registry.emplace<Position>(asteroid, Position {Vector2(x, y)});

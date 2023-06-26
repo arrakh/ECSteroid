@@ -20,6 +20,12 @@ void Box2DPhysicsSystem::Unload() {
 }
 
 void Box2DPhysicsSystem::FixedUpdate(entt::registry *registry) {
+    for (auto& body : destroyQueue) {
+        world.DestroyBody(body);
+    }
+
+    destroyQueue.clear();
+
     world.Step(Time::fixedDeltaTime(), 6, 2);
     world.ClearForces();
 
@@ -30,6 +36,7 @@ void Box2DPhysicsSystem::FixedUpdate(entt::registry *registry) {
     registry->clear<PhysicsDefinition>();
 
     registry->view<PhysicsBody>().each([this, registry](auto entity, PhysicsBody body){
+        if (!registry->valid(entity)) return;
         UpdateTransform(registry, entity, body);
     });
 }
@@ -74,4 +81,18 @@ void Box2DPhysicsSystem::BeginContact(b2Contact *contact) {
 
     CollisionEvent event{entityA, entityB};
     eventPublisher->Publish(event);
+}
+
+void Box2DPhysicsSystem::SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) {
+    registry->on_destroy<PhysicsBody>().connect<&Box2DPhysicsSystem::OnBodyDestroyed>(this);
+}
+
+void Box2DPhysicsSystem::UnsubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) {
+}
+
+void Box2DPhysicsSystem::OnBodyDestroyed(entt::registry &registry, entt::entity entity) {
+    auto bodyData = registry.try_get<PhysicsBody>(entity);
+    if (bodyData == nullptr) throw std::invalid_argument("TRYING TO DESTROY BODY WITHOUT PHYSICS BODY???");
+
+    if (registry.valid(entity)) destroyQueue.push_back(bodyData->body);
 }

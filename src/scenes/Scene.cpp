@@ -37,3 +37,11 @@ void Scene::Render(sf::RenderTarget *renderTarget) {
     sysHandle.RenderSystems(&registry, renderTarget);
     OnRender(renderTarget);
 }
+
+void Scene::FinalUpdate() {
+    sysHandle.FinalUpdateSystems(&registry);
+}
+
+void Scene::LateUpdate() {
+    sysHandle.LateUpdateSystems(&registry);
+}

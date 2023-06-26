@@ -79,12 +79,16 @@ void Application::Run() {
 
         currentScene->Update();
 
+        currentScene->LateUpdate();
+
         window->clear();
 
         currentScene->Render(window.get());
         ImGui::SFML::Render(*window);
 
         window->display();
+
+        currentScene->FinalUpdate();
     }
 
     ImGui::SFML::Shutdown(*window);

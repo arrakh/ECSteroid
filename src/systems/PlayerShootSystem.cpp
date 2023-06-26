@@ -14,6 +14,8 @@
 #include "../components/debug/Box2DDebug.h"
 #include "../components/bullet/BulletLifetime.h"
 #include "../components/bullet/BulletDestroyOnCollision.h"
+#include "../components/bullet/BulletDamage.h"
+#include "../components/PhysicsBody.h"
 
 void PlayerShootSystem::Update(entt::registry *registry) {
 
@@ -29,7 +31,7 @@ void PlayerShootSystem::Update(entt::registry *registry) {
     for (auto [entity, shootData, pos, rot] : shoot.each()) {
         if (shootData.cooldown > 0.f) registry->emplace<ShootAbilityCooldown>(entity, ShootAbilityCooldown { shootData.cooldown });
 
-        CreateBullet(registry, pos.vector, rot.value, shootData);
+        CreateBullet(entity, registry, pos.vector, rot.value, shootData);
     }
 }
 
@@ -41,7 +43,7 @@ void PlayerShootSystem::Unload() {
 
 }
 
-void PlayerShootSystem::CreateBullet(entt::registry *registry, const Vector2 pos, const float angle, ShootAbility data) {
+void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *registry, const Vector2 pos, const float angle, ShootAbility data) {
     auto bullet = registry->create();
     float size = 5.f;
     float halfSize = size / 2.f;
@@ -56,12 +58,18 @@ void PlayerShootSystem::CreateBullet(entt::registry *registry, const Vector2 pos
     Vector2 shootDir {cos(rad) , sin(rad)};
     Vector2 bulletPos =  pos + (shootDir * data.startDistance);
 
+    /*auto bodyData = registry->try_get<PhysicsBody>(shooter);
+    if (bodyData != nullptr){
+        bulletPos = bulletPos + Vector2{bodyData->body->GetLinearVelocity()};
+    }*/
+
     registry->emplace<Position>(bullet, Position {bulletPos});
     registry->emplace<Rotation>(bullet, Rotation {angle});
 
     registry->emplace<BulletDestroyOnCollision>(bullet);
 
     if (data.bulletLifetime > 0.f) registry->emplace<BulletLifetime>(bullet, BulletLifetime { data.bulletLifetime});
+    if (data.bulletDamage > 0.f) registry->emplace<BulletDamage>(bullet, BulletDamage { data.bulletDamage});
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;

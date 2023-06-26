@@ -57,3 +57,15 @@ void SystemsHandler::InjectPublisher(Events::Publisher *publisher) {
         system->OnInjectPublisher(publisher);
     }
 }
+
+void SystemsHandler::FinalUpdateSystems(entt::registry *registry) {
+    for (const auto& system : finalUpdatables) {
+        system->FinalUpdate(registry);
+    }
+}
+
+void SystemsHandler::LateUpdateSystems(entt::registry *registry) {
+    for (const auto& system : lateUpdatables) {
+        system->LateUpdate(registry);
+    }
+}
