@@ -11,8 +11,6 @@
 #include "../components/PhysicsDefinition.h"
 #include "../systems/Box2DPhysicsSystem.h"
 #include "imgui.h"
-#include "../components/SFMLDrawable.h"
-#include "../components/SFMLTransformable.h"
 #include "../systems/SFMLSpriteSystem.h"
 #include "../systems/Box2DDebugDrawSystem.h"
 #include "../components/Sprite.h"
@@ -21,13 +19,15 @@
 #include "../components/WrapAround.h"
 #include "../components/ShootAbility.h"
 #include "../systems/PlayerShootSystem.h"
-#include "../systems/DebugAngleSystem.h"
 #include "../systems/BulletLifetimeSystem.h"
 #include "../systems/BulletCollisionSystem.h"
 #include "../systems/DestroyOnZeroHealthSystem.h"
-#include "../components/Health.h"
+#include "../systems/AsteroidSpawnerSystem.h"
+#include "../systems/BoidSystem.h"
+#include "../datatype/CollisionGroup.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
+    handle->RegisterSystem(new AsteroidSpawnerSystem());
     handle->RegisterSystem(new Box2DPhysicsSystem());
     handle->RegisterSystem(new LocalPlayerMovementSystem());
     handle->RegisterSystem(new SFMLRenderSystem());
@@ -51,31 +51,9 @@ void GameScene::OnStart() {
     CreateBackground();
 
     CreatePlayer();
-
-    std::random_device dev;
-    std::mt19937 rng(dev());
-
-    for (int i = 0; i < 300; ++i) {
-        std::uniform_real_distribution<float> randSize(20,50);
-        float size = randSize(rng);
-        float doubleSize = size * 2;
-
-        float hw = width/2.f;
-        float hh = height/2.f;
-
-        std::uniform_real_distribution<float> randPosX(-hw + doubleSize ,hw - doubleSize);
-        std::uniform_real_distribution<float> randPosY(-hh + doubleSize ,hh - doubleSize);
-
-        std::uniform_real_distribution<float> randRot(0.f,360.f);
-
-        CreateAsteroid(size, randPosX(rng), randPosY(rng), randRot(rng));
-    }
 }
 
-bool showWindow = false;
-
 void GameScene::OnUpdate() {
-    ImGui::ShowDemoWindow(&showWindow);
 }
 
 void GameScene::OnFixedUpdate() {
@@ -107,8 +85,8 @@ void GameScene::CreatePlayer() {
     registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
 
     registry.emplace<ShootAbility>(player, ShootAbility {
-        .startDistance = size.x / 2.f + 6.f,  .cooldown = 0.2f,
-        .bulletSpeed = 400.f, .bulletLifetime = 1.5f, .bulletDamage = 15.f
+        .startDistance = size.x / 2.f + 10.f,  .cooldown = 0.2f,
+        .bulletSpeed = 800.f, .bulletLifetime = 1.2f, .bulletDamage = 15.f
     });
 
     b2BodyDef bodyDef;
@@ -122,43 +100,10 @@ void GameScene::CreatePlayer() {
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.1f;
     fixtureDef.shape = rect;
+    fixtureDef.filter.categoryBits = CATEGORY_PLAYER;
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(player);
 
     registry.emplace<PhysicsDefinition>(player, PhysicsDefinition {bodyDef, fixtureDef, rect});
-}
-
-void GameScene::CreateAsteroid(float size, float x, float y, float rotation) {
-    auto asteroid = registry.create();
-
-    registry.emplace<SpriteDefinition>(asteroid, SpriteDefinition {
-            .spriteName =  "meteorBrown_big4", .initialOrder =  0,
-            .useCustomDimensions = true, .customWidth = size, .customHeight = size
-    });
-
-    registry.emplace<Box2DDebugDefinition>(asteroid, Box2DDebugDefinition { sf::Color::Green, 1.f});
-
-    registry.emplace<Health>(asteroid, Health{100.f});
-
-    registry.emplace<WrapAround>(asteroid, WrapAround {});
-    registry.emplace<Position>(asteroid, Position {Vector2(x, y)});
-    registry.emplace<Rotation>(asteroid, Rotation {rotation});
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.linearDamping = 0.0f;
-    bodyDef.position = Vector2(x, y);
-    bodyDef.angle = rotation * b2_pi / 180.0f;
-
-    auto shape = new b2CircleShape;
-    shape->m_radius = size * 0.01f / 2.f;
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.density = 0.2f;
-    fixtureDef.friction = 0.1f;
-    fixtureDef.shape = shape;
-    fixtureDef.userData.pointer = static_cast<std::uintptr_t>(asteroid);
-
-    registry.emplace<PhysicsDefinition>(asteroid, PhysicsDefinition {bodyDef, fixtureDef, shape});
 }
 
 void GameScene::CreateBackground() {

@@ -25,8 +25,6 @@ private:
 
     void CreatePlayer();
 
-    void CreateAsteroid(float size, float x, float y, float rotation);
-
     void CreateBackground();
 };
 

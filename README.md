@@ -30,8 +30,8 @@ To Be Added below
 - In-Game Mechanics
   - ~~Simple Player Movement~~
   - ~~Wrap Around System~~
-  - Shooting and Damage Mechanic
-  - Asteroid Splitting Mechanic
+  - ~~Shooting and Damage Mechanic~~
+  - ~~Asteroid Splitting Mechanic~~
   - Health and Score UI
   - Difficulty Progression
   - Game Over State
@@ -45,10 +45,11 @@ To Be Added below
 - Game Particles
 
 # Improvement Notes
-_Last updated: 24/6/2023_
+_Last updated: 2023/7/1_
 - Serializable components for entity
 - A component that is created from a definition component should live side by side with the definition
 - (not sure if possible) Require attribute and another attribute that prevents from being added outside of systems
+- Go through all code and replace magic numbers with consts
 - In-game Debug tool:
   - Hierarchy viewer
   - Component inspectory

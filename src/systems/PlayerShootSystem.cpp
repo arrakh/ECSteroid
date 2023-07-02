@@ -16,6 +16,7 @@
 #include "../components/bullet/BulletDestroyOnCollision.h"
 #include "../components/bullet/BulletDamage.h"
 #include "../components/PhysicsBody.h"
+#include "../datatype/CollisionGroup.h"
 
 void PlayerShootSystem::Update(entt::registry *registry) {
 
@@ -45,7 +46,7 @@ void PlayerShootSystem::Unload() {
 
 void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *registry, const Vector2 pos, const float angle, ShootAbility data) {
     auto bullet = registry->create();
-    float size = 5.f;
+    float size = 8.f;
     float halfSize = size / 2.f;
 
     registry->emplace<Box2DDebugDefinition>(bullet, Box2DDebugDefinition { sf::Color::Green, 1.f});
@@ -56,12 +57,7 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
 
     float rad = angle * M_PI / 180;
     Vector2 shootDir {cos(rad) , sin(rad)};
-    Vector2 bulletPos =  pos + (shootDir * data.startDistance);
-
-    /*auto bodyData = registry->try_get<PhysicsBody>(shooter);
-    if (bodyData != nullptr){
-        bulletPos = bulletPos + Vector2{bodyData->body->GetLinearVelocity()};
-    }*/
+    Vector2 bulletPos =  pos + (shootDir * (data.startDistance));
 
     registry->emplace<Position>(bullet, Position {bulletPos});
     registry->emplace<Rotation>(bullet, Rotation {angle});
@@ -77,7 +73,6 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
     bodyDef.position = bulletPos;
     bodyDef.angle = angle * b2_pi / 180.0f;
     bodyDef.bullet = true;
-    bodyDef.linearVelocity = shootDir * data.bulletSpeed;
 
     auto shape = new b2CircleShape;
     shape->m_radius = size * 0.01f / 2.f;
@@ -87,6 +82,17 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
     fixtureDef.friction = 0.f;
     fixtureDef.shape = shape;
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(bullet);
+
+    float velIncrease = 0.f;
+
+    auto shooterBody = registry->try_get<PhysicsBody>(shooter);
+    if (shooterBody != nullptr) {
+        auto vel = Vector2{shooterBody->body->GetLinearVelocity()};
+        velIncrease = sqrt(vel.x * vel.x + vel.y * vel.y);
+        fixtureDef.filter.maskBits = ~shooterBody->fixture->GetFilterData().categoryBits;
+    }
+
+    bodyDef.linearVelocity = shootDir * (data.bulletSpeed + velIncrease);
 
     registry->emplace<PhysicsDefinition>(bullet, PhysicsDefinition {bodyDef, fixtureDef, shape});
 }

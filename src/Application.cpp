@@ -2,7 +2,6 @@
 // Created by Arya Rakha on 6/9/2023.
 //
 
-#include <entt/entt.hpp>
 #include <iostream>
 #include "util/Time.h"
 #include "scenes/GameScene.h"
