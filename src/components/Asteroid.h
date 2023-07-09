@@ -13,6 +13,7 @@ public:
     float rotationSpeed;
     float startRotation;
     float startHealth;
+    float damageOnHit;
     int splitCount;
 };
 

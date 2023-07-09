@@ -113,13 +113,14 @@ void AsteroidSpawnerSystem::Load(entt::registry *registry) {
 
         float x = Random::Range(-hw + doubleSize ,hw - doubleSize);
         float y = Random::Range(-hh + doubleSize ,hh - doubleSize);
+        float randDamage = Random::Range(70.f, 90.f);
         float randAngle = Random::Range(0.f, 360.f);
         float randSpeed = Random::Range(60.f, 130.f);
         float randRotSpeed = Random::Range(50.f, 300.f);
         Vector2 randDir = Random::UnitCircle();
 
-        Asteroid def {.size = randSize, .speed = randSpeed, .rotationSpeed = randRotSpeed,
-                      .startRotation = randAngle, .startHealth = randHealth, .splitCount = randSplitCount};
+        Asteroid def {.size = randSize, .speed = randSpeed, .rotationSpeed = randRotSpeed, .startRotation = randAngle,
+                      .startHealth = randHealth, .damageOnHit = randDamage, .splitCount = randSplitCount};
 
         CreateAsteroid(registry, def, Vector2{x, y},  randDir);
     }

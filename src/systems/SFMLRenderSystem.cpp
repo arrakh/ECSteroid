@@ -28,9 +28,6 @@ void SFMLRenderSystem::ApplyTransforms(entt::registry *registry) {
 
         auto rotData = registry->try_get<Rotation>(entity);
         if (rotData != nullptr) { t.transformable->setRotation(rotData->value + t.offsetAngle); }
-
-        auto id = static_cast<uintptr_t>(entity);
-        auto pos = t.transformable->getPosition();
     }
 }
 

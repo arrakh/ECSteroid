@@ -45,7 +45,8 @@ To Be Added below
 - Game Particles
 
 # Improvement Notes
-_Last updated: 2023/7/1_
+_Last updated: 2023/7/9_
+- Refactor UI and Collission Systems to use inheritance to prevent repeating code
 - Serializable components for entity
 - A component that is created from a definition component should live side by side with the definition
 - (not sure if possible) Require attribute and another attribute that prevents from being added outside of systems

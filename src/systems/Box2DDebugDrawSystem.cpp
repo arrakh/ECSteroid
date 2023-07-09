@@ -11,6 +11,7 @@ bool Box2DDebugDrawSystem::shouldDraw = true;
 
 void Box2DDebugDrawSystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
     if (!shouldDraw) return;
+
     auto dataView = registry->view<Box2DDebugData, PhysicsBody>();
     for (auto [entity, data, body]: dataView.each()) {
         auto pos = body.body->GetPosition();
@@ -27,7 +28,7 @@ void Box2DDebugDrawSystem::Render(entt::registry *registry, sf::RenderTarget *re
 }
 
 int Box2DDebugDrawSystem::GetRenderOrder() {
-    return INT32_MAX;
+    return 200;
 }
 
 void Box2DDebugDrawSystem::FixedUpdate(entt::registry *registry) {

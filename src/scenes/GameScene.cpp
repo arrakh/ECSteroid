@@ -25,6 +25,10 @@
 #include "../systems/AsteroidSpawnerSystem.h"
 #include "../systems/BoidSystem.h"
 #include "../datatype/CollisionGroup.h"
+#include "../systems/ui/LocalPlayerHealthUISystem.h"
+#include "../components/Health.h"
+#include "../systems/AsteroidToPlayerCollisionSystem.h"
+#include "../systems/ui/GameOverTextUISystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new AsteroidSpawnerSystem());
@@ -37,7 +41,10 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new PlayerShootSystem());
     handle->RegisterSystem(new BulletLifetimeSystem());
     handle->RegisterSystem(new BulletCollisionSystem());
+    handle->RegisterSystem(new AsteroidToPlayerCollisionSystem());
     handle->RegisterSystem(new DestroyOnZeroHealthSystem());
+    handle->RegisterSystem(new LocalPlayerHealthUISystem());
+    handle->RegisterSystem(new GameOverTextUISystem());
 }
 
 void GameScene::OnStart() {
@@ -83,6 +90,8 @@ void GameScene::CreatePlayer() {
 
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
     registry.emplace<SpinSpeed>(player, SpinSpeed {6.0f});
+
+    registry.emplace<Health>(player, Health{200.f});
 
     registry.emplace<ShootAbility>(player, ShootAbility {
         .startDistance = size.x / 2.f + 10.f,  .cooldown = 0.2f,

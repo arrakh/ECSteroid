@@ -22,8 +22,10 @@ struct Vector2 {
     operator sf::Vector2f() const { return sf::Vector2f(x, y); }
     operator b2Vec2() const { return b2Vec2(x * B2_SCALE_FACTOR, y * B2_SCALE_FACTOR); }
 
+    Vector2 operator-(const Vector2& other) const { return Vector2(x - other.x, y - other.y); }
     Vector2 operator+(const Vector2& other) const { return Vector2(x + other.x, y + other.y); }
     Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
+    Vector2 operator/(float scalar) const { return Vector2(x / scalar, y / scalar); }
 
     Vector2& operator=(const Vector2& other) {
         if (this != &other) {
