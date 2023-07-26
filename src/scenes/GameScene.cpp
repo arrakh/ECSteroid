@@ -23,15 +23,17 @@
 #include "../systems/BulletCollisionSystem.h"
 #include "../systems/DestroyOnZeroHealthSystem.h"
 #include "../systems/AsteroidSpawnerSystem.h"
-#include "../systems/BoidSystem.h"
 #include "../datatype/CollisionGroup.h"
 #include "../systems/ui/LocalPlayerHealthUISystem.h"
 #include "../components/Health.h"
 #include "../systems/AsteroidToPlayerCollisionSystem.h"
 #include "../systems/ui/GameOverTextUISystem.h"
+#include "../systems/AsteroidScoreSystem.h"
+#include "../systems/ui/LocalScoreUISystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new AsteroidSpawnerSystem());
+    handle->RegisterSystem(new AsteroidScoreSystem());
     handle->RegisterSystem(new Box2DPhysicsSystem());
     handle->RegisterSystem(new LocalPlayerMovementSystem());
     handle->RegisterSystem(new SFMLRenderSystem());
@@ -43,8 +45,11 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->RegisterSystem(new BulletCollisionSystem());
     handle->RegisterSystem(new AsteroidToPlayerCollisionSystem());
     handle->RegisterSystem(new DestroyOnZeroHealthSystem());
+
+    //UI Systems
     handle->RegisterSystem(new LocalPlayerHealthUISystem());
     handle->RegisterSystem(new GameOverTextUISystem());
+    handle->RegisterSystem(new LocalScoreUISystem());
 }
 
 void GameScene::OnStart() {
@@ -61,6 +66,19 @@ void GameScene::OnStart() {
 }
 
 void GameScene::OnUpdate() {
+    ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_FirstUseEver);
+
+    static bool windowOpen;
+    if (!ImGui::Begin("Game Scene", &windowOpen)){
+        ImGui::End();
+        return;
+    }
+
+    if (ImGui::Button("Reset")){
+        shouldEnd = true;
+    }
+
+    ImGui::End();
 }
 
 void GameScene::OnFixedUpdate() {

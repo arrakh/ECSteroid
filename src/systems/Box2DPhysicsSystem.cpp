@@ -11,7 +11,6 @@
 
 
 void Box2DPhysicsSystem::Load(entt::registry *registry) {
-    std::cout << "WORLD GRAVITY IS " << world.GetGravity().y << "\n";
     world.SetContactListener(this);
 }
 

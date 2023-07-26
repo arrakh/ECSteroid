@@ -42,8 +42,6 @@ void AsteroidToPlayerCollisionSystem::HandlePossibleAsteroidCollision(entt::regi
     Vector2 playerPushDir{ playerBody.body->GetPosition() - asteroidBody.body->GetPosition() };
     Vector2 asteroidPushDir{ asteroidBody.body->GetPosition() - playerBody.body->GetPosition() };
 
-    std::cout << "WILL PUSH PLAYER BY X:" << playerPushDir.x << " Y:" << playerPushDir.y;
-
     playerBody.body->ApplyLinearImpulseToCenter(playerPushDir * 0.2f, true);
     asteroidBody.body->ApplyLinearImpulseToCenter(asteroidPushDir * 0.2f, true);
 }

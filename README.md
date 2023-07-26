@@ -32,24 +32,24 @@ To Be Added below
   - ~~Wrap Around System~~
   - ~~Shooting and Damage Mechanic~~
   - ~~Asteroid Splitting Mechanic~~
-  - Health and Score UI
+  - ~~Health and Score UI~~
   - Difficulty Progression
-  - Game Over State
+  - ~~Game Over State~~
 - Service Layer
 - Audio System
 - Scene Management
 - Main Menu
   - Button Entity
   - UI Design
-- Simple Tweening System
 - Game Particles
 
 # Improvement Notes
-_Last updated: 2023/7/9_
-- Refactor UI and Collission Systems to use inheritance to prevent repeating code
+_Last updated: 2023/7/25_
+- Refactor UI and Collision Systems to use inheritance to prevent repeating code
+  - Everything in the UI folder should derive from a UISystem
 - Serializable components for entity
 - A component that is created from a definition component should live side by side with the definition
-- (not sure if possible) Require attribute and another attribute that prevents from being added outside of systems
+- (not sure if possible) add "Require" attribute and another attribute that prevents components from being added outside of systems
 - Go through all code and replace magic numbers with consts
 - In-game Debug tool:
   - Hierarchy viewer
@@ -59,11 +59,12 @@ _Last updated: 2023/7/9_
   - ~~This is possible by introducing a "service"? layer that systems can take a handle on~~ 
   - The above is invalid because a "Service" layer should exist above scenes and on the application layer, and registry should exist only in the scene layer.
 - Should be service:
-  - TextureService to pre-load on-demand texture
+  - SFMLTextureService to pre-load on-demand texture
+  - SFMLFontService to pre-load on-demand fonts
   - SFMLScreen for anything window-related
   - SceneManager to do anything scene related like switching scenes
   - InputService to handle keybindings, detection, etc.
-  - AudioService to load and handle audio playback 
+  - SFMLAudioService to load and handle audio playback 
 - Should make extension functions to convert float and angle to Box2D world floats and radians
 - Should have static Screen (or service?) class to reference width and height dynamically
 - There seems to be a lot of systems that require a definition component to construct another component (eg: Box2DPhysicsSystem, SFMLSpriteSystem, etc). There has got to be a better way.

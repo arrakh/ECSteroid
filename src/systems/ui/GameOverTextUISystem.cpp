@@ -7,11 +7,12 @@
 #include "../../components/LocalPlayer.h"
 #include "../../util/Time.h"
 #include "../../datatype/Vector2.h"
+#include "imgui.h"
 #include <cmath>
 #include <iostream>
 
 void GameOverTextUISystem::Load(entt::registry *registry) {
-    uiView.setViewport(sf::FloatRect{0, 0 ,1 ,1});
+    uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
 
     Vector2 bgSize {99999, 99999};
     blackBg.setFillColor(sf::Color{0, 0, 0, 0});
@@ -25,12 +26,19 @@ void GameOverTextUISystem::Load(entt::registry *registry) {
     gameOverText.setFont(gameOverFont);
     gameOverText.setCharacterSize(72);
     gameOverText.setString("Game Over");
-    gameOverText.setFillColor(sf::Color{255, 255, 255, 0});
+    gameOverText.setFillColor(sf::Color{255, 255, 255, 255});
+
+    auto bounds = gameOverText.getLocalBounds();
+    gameOverText.setOrigin(bounds.left + bounds.width/2.f, bounds.top + bounds.height/2.f);
+    gameOverText.setPosition(Application::Width / 2.f, Application::Height / 2.f - 100);
 }
 
 void GameOverTextUISystem::Unload() {
 
 }
+
+Vector2 origins{0.0f, 0.0f};
+Vector2 pos {0.0f, 0.0f};
 
 void GameOverTextUISystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
     if (!isGameOver) return;
@@ -39,14 +47,16 @@ void GameOverTextUISystem::Render(entt::registry *registry, sf::RenderTarget *re
     renderTarget->setView(uiView);
 
     alphaProgress += Time::deltaTime() / animateDuration;
-    std::cout << "alpha progress is now " << alphaProgress << std::endl;
     if (alphaProgress >= 1.f) alphaProgress = 1.f;
 
-    int blackAlpha = std::ceil(78.f * alphaProgress);
+    int blackAlpha = std::ceil(180.f * alphaProgress);
     blackBg.setFillColor(sf::Color{0, 0, 0, static_cast<sf::Uint8>(blackAlpha)});
 
     int textAlpha = std::ceil(255.f * alphaProgress);
     gameOverText.setFillColor(sf::Color{255, 255, 255, static_cast<sf::Uint8>(textAlpha)});
+
+    renderTarget->draw(blackBg);
+    renderTarget->draw(gameOverText);
 
     renderTarget->setView(originalView);
 }

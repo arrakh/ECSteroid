@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include "util/Time.h"
-#include "scenes/GameScene.h"
 #include "Application.h"
 #include "imgui-SFML.h"
 #include "events/SFMLEvent.h"
@@ -19,78 +18,83 @@ void Application::Run() {
 
     auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(Width_u, Height_u), "CMake SFML Project");
     WindowPtr = window;
-    window->setFramerateLimit(120);
-    window->setVerticalSyncEnabled(false);
+    WindowPtr->setFramerateLimit(120);
+    WindowPtr->setVerticalSyncEnabled(false);
     auto view = window->getView();
     view.setCenter(0,0);
-    window->setView(view);
+    WindowPtr->setView(view);
 
     auto initialized = ImGui::SFML::Init(*window);
 
 
     if (!initialized){
-        std::cout << "Can't initialize ImGui - SFML!" << std::endl;
+        std::cout << "Can't initialize ImGui - SFML!\n";
         return;
     }
 
-    Scene* currentScene = new GameScene();
-
-    currentScene->Start();
-    float accumulator = 0.f;
-
-    while (window->isOpen())
+    while (WindowPtr->isOpen())
     {
-        Time::updateDeltaTime();
+        Scene* currentScene = new GameScene();
 
-        for (auto event = sf::Event{}; window->pollEvent(event);)
-        {
-            ImGui::SFML::ProcessEvent(*window, event);
+        currentScene->Start();
+        fixedTickAccumulator = 0.f;
 
-            auto eventPtr = std::make_shared<sf::Event>(event);
-            SFMLEvent sfmlEvent {window, eventPtr};
+        while (!currentScene->ShouldEnd() && WindowPtr->isOpen())
+            GameLoop(currentScene);
 
-            currentScene->PublishEvent(sfmlEvent);
-
-            if (event.type == sf::Event::Closed)
-            {
-                window->close();
-            }
-
-            if (event.type == sf::Event::Resized){
-                auto view = window->getView();
-                Width_u = event.size.width;
-                Height_u = event.size.height;
-                Width = Width_u;
-                Height = Height_u;
-                view.setSize(Width_u, Height_u);
-            }
-        }
-
-        ImGui::SFML::Update(*window, Time::deltaSFTime());
-
-        float fixedTickRate = Time::fixedDeltaTime();
-
-        accumulator += Time::deltaTime();
-        while (accumulator >= fixedTickRate){
-            currentScene->FixedUpdate();
-            accumulator -= fixedTickRate;
-        }
-
-        currentScene->Update();
-
-        currentScene->LateUpdate();
-
-        window->clear();
-
-        currentScene->Render(window.get());
-        ImGui::SFML::Render(*window);
-
-        window->display();
-
-        currentScene->FinalUpdate();
+        delete currentScene;
     }
 
-    ImGui::SFML::Shutdown(*window);
+    ImGui::SFML::Shutdown(*WindowPtr);
+}
 
-    delete currentScene;
+void Application::GameLoop(Scene *currentScene) {
+    Time::updateDeltaTime();
+
+    for (auto event = sf::Event{}; WindowPtr->pollEvent(event);)
+    {
+        ImGui::SFML::ProcessEvent(*WindowPtr, event);
+
+        auto eventPtr = std::make_shared<sf::Event>(event);
+        SFMLEvent sfmlEvent {WindowPtr, eventPtr};
+
+        currentScene->PublishEvent(sfmlEvent);
+
+        if (event.type == sf::Event::Closed)
+        {
+            WindowPtr->close();
+        }
+
+        if (event.type == sf::Event::Resized){
+            auto view = WindowPtr->getView();
+            Width_u = event.size.width;
+            Height_u = event.size.height;
+            Width = Width_u;
+            Height = Height_u;
+            view.setSize(Width_u, Height_u);
+        }
+    }
+
+    ImGui::SFML::Update(*WindowPtr, Time::deltaSFTime());
+
+    float fixedTickRate = Time::fixedDeltaTime();
+
+    fixedTickAccumulator += Time::deltaTime();
+    while (fixedTickAccumulator >= fixedTickRate){
+        currentScene->FixedUpdate();
+        fixedTickAccumulator -= fixedTickRate;
+    }
+
+    currentScene->Update();
+
+    currentScene->LateUpdate();
+
+    WindowPtr->clear();
+
+    currentScene->Render(WindowPtr.get());
+    ImGui::SFML::Render(*WindowPtr);
+
+    WindowPtr->display();
+
+    currentScene->FinalUpdate();
 }

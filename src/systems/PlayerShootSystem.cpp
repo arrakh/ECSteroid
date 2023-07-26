@@ -17,6 +17,7 @@
 #include "../components/bullet/BulletDamage.h"
 #include "../components/PhysicsBody.h"
 #include "../datatype/CollisionGroup.h"
+#include "../components/bullet/BulletOwner.h"
 
 void PlayerShootSystem::Update(entt::registry *registry) {
 
@@ -48,6 +49,8 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
     auto bullet = registry->create();
     float size = 8.f;
     float halfSize = size / 2.f;
+
+    registry->emplace<BulletOwner>(bullet, BulletOwner { shooter });
 
     registry->emplace<Box2DDebugDefinition>(bullet, Box2DDebugDefinition { sf::Color::Green, 1.f});
     registry->emplace<SpriteDefinition>(bullet, SpriteDefinition {

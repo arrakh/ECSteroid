@@ -43,7 +43,7 @@ void AsteroidSpawnerSystem::OnAsteroidDestroyed(entt::registry &registry, entt::
     float newSize = asteroidData->size / 2.f;
     float newSpeed = asteroidData->speed * 1.5f;
     float newRotSpeed = asteroidData->rotationSpeed * 1.5f;
-    float newHealth = asteroidData->startHealth * 0.8f;
+    float newHealth = asteroidData->startHealth * 0.5f;
 
     for (int i = 0; i < randCount; ++i) {
         Vector2 randDir = Random::UnitCircle();

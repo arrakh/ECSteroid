@@ -25,7 +25,7 @@ public:
 private:
     sf::RectangleShape healthBgBar;
     sf::RectangleShape healthBar;
-    Vector2 barSize { 200, 40 };
+    Vector2 barSize { 500, 30 };
     Vector2 barOffset {30, 30 };
     sf::View uiView;
 };

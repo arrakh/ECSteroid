@@ -7,16 +7,21 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "scenes/GameScene.h"
 
 class Application {
 public:
     void Run();
+
+    float fixedTickAccumulator = 0;
 
     static float Width;
     static float Height;
     static unsigned int Width_u;
     static unsigned int Height_u;
     static std::shared_ptr<sf::RenderWindow> WindowPtr;
+
+    void GameLoop(Scene *currentScene);
 };
 
 

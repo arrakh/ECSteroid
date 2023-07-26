@@ -21,6 +21,8 @@ public:
 
     template<typename EventType> void PublishEvent(const EventType& event) { eventPublisher.Publish(event); }
 
+    bool ShouldEnd() const {return shouldEnd;}
+
 protected:
     virtual void RegisterSystems(SystemsHandler* handle) = 0;
     virtual void OnStart() = 0;
@@ -29,6 +31,8 @@ protected:
     virtual void OnRender(sf::RenderTarget* renderTarget) = 0;
 
     entt::registry registry;
+
+    bool shouldEnd = false;
 
 private:
     SystemsHandler sysHandle;

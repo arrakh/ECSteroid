@@ -7,6 +7,8 @@
 #include "../components/bullet/BulletDestroyOnCollision.h"
 #include "../components/bullet/BulletDamage.h"
 #include "../components/Health.h"
+#include "../components/Killer.h"
+#include "../components/bullet/BulletOwner.h"
 
 void BulletCollisionSystem::SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) {
     subscriber->Subscribe<CollisionEvent>([this, registry](const CollisionEvent& event){ OnCollision(registry, event); });
@@ -26,10 +28,14 @@ void BulletCollisionSystem::HandlePossibleBulletCollision(entt::registry *regist
     auto damageData = registry->try_get<BulletDamage>(possibleBullet);
     auto otherHealthData = registry->try_get<Health>(other);
 
-    if (damageData != nullptr && otherHealthData != nullptr) {
-        auto newHealth = otherHealthData->health - damageData->damage;
-        registry->patch<Health>(other, [newHealth](Health& data){data.health = newHealth;});
-    }
+    if (damageData == nullptr || otherHealthData == nullptr) return;
+
+    auto newHealth = otherHealthData->health - damageData->damage;
+
+    auto bulletOwner = registry->try_get<BulletOwner>(possibleBullet);
+
+    if (bulletOwner != nullptr && newHealth <= 0.f) registry->emplace_or_replace<Killer>(other, Killer { bulletOwner->entity });
+    registry->patch<Health>(other, [newHealth](Health& data){data.health = newHealth;});
 
     bool destroyOnColl = registry->all_of<BulletDestroyOnCollision>(possibleBullet);
     if (destroyOnColl) registry->destroy(possibleBullet);

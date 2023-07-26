@@ -8,7 +8,7 @@
 #include "../../Application.h"
 
 void LocalPlayerHealthUISystem::Load(entt::registry *registry) {
-    uiView.setViewport(sf::FloatRect{0, 0 ,1 ,1});
+    uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
     healthBar.setFillColor(sf::Color::Green);
     healthBgBar.setFillColor(sf::Color::Red);
     healthBgBar.setOutlineColor(sf::Color::White);
