@@ -7,12 +7,13 @@
 
 
 #include "../systems/core/SystemsHandler.h"
+#include "../services/core/ServiceLocator.h"
 
 class Scene {
 public:
     Scene();
     virtual ~Scene();
-    void Start();
+    void Start(std::shared_ptr<ServiceLocator> serviceLocator);
     void Update();
     void FixedUpdate();
     void FinalUpdate();
@@ -35,7 +36,8 @@ protected:
     bool shouldEnd = false;
 
 private:
-    SystemsHandler sysHandle;
+    std::shared_ptr<ServiceLocator> serviceLocator;
+    SystemsHandler systemHandler;
     EventMap eventMap;
     Events::Subscriber eventListener {&eventMap };
     Events::Publisher eventPublisher { &eventMap };

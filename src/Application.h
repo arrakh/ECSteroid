@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "scenes/GameScene.h"
+#include "services/core/ServicesHandler.h"
+#include "services/core/ServiceLocator.h"
 
 class Application {
 public:
@@ -22,6 +24,12 @@ public:
     static std::shared_ptr<sf::RenderWindow> WindowPtr;
 
     void GameLoop(Scene *currentScene);
+
+private:
+    ServicesHandler servicesHandler;
+    std::shared_ptr<ServiceLocator> serviceLocator;
+
+    void RegisterServices();
 };
 
 

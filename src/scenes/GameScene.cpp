@@ -32,24 +32,24 @@
 #include "../systems/ui/LocalScoreUISystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
-    handle->RegisterSystem(new AsteroidSpawnerSystem());
-    handle->RegisterSystem(new AsteroidScoreSystem());
-    handle->RegisterSystem(new Box2DPhysicsSystem());
-    handle->RegisterSystem(new LocalPlayerMovementSystem());
-    handle->RegisterSystem(new SFMLRenderSystem());
-    handle->RegisterSystem(new SFMLSpriteSystem());
-    handle->RegisterSystem(new Box2DDebugDrawSystem());
-    handle->RegisterSystem(new WrapAroundSystem());
-    handle->RegisterSystem(new PlayerShootSystem());
-    handle->RegisterSystem(new BulletLifetimeSystem());
-    handle->RegisterSystem(new BulletCollisionSystem());
-    handle->RegisterSystem(new AsteroidToPlayerCollisionSystem());
-    handle->RegisterSystem(new DestroyOnZeroHealthSystem());
+    handle->Register(new AsteroidSpawnerSystem());
+    handle->Register(new AsteroidScoreSystem());
+    handle->Register(new Box2DPhysicsSystem());
+    handle->Register(new LocalPlayerMovementSystem());
+    handle->Register(new SFMLRenderSystem());
+    handle->Register(new SFMLSpriteSystem());
+    handle->Register(new Box2DDebugDrawSystem());
+    handle->Register(new WrapAroundSystem());
+    handle->Register(new PlayerShootSystem());
+    handle->Register(new BulletLifetimeSystem());
+    handle->Register(new BulletCollisionSystem());
+    handle->Register(new AsteroidToPlayerCollisionSystem());
+    handle->Register(new DestroyOnZeroHealthSystem());
 
     //UI Systems
-    handle->RegisterSystem(new LocalPlayerHealthUISystem());
-    handle->RegisterSystem(new GameOverTextUISystem());
-    handle->RegisterSystem(new LocalScoreUISystem());
+    handle->Register(new LocalPlayerHealthUISystem());
+    handle->Register(new GameOverTextUISystem());
+    handle->Register(new LocalScoreUISystem());
 }
 
 void GameScene::OnStart() {

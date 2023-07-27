@@ -35,7 +35,11 @@ To Be Added below
   - ~~Health and Score UI~~
   - Difficulty Progression
   - ~~Game Over State~~
-- Service Layer
+- ~~Service Layer~~
+  - SFMLTextureService
+  - SFMLFontService
+  - SFMLScreen
+  - SFMLAudioService
 - Audio System
 - Scene Management
 - Main Menu
@@ -62,7 +66,6 @@ _Last updated: 2023/7/25_
   - SFMLTextureService to pre-load on-demand texture
   - SFMLFontService to pre-load on-demand fonts
   - SFMLScreen for anything window-related
-  - SceneManager to do anything scene related like switching scenes
   - InputService to handle keybindings, detection, etc.
   - SFMLAudioService to load and handle audio playback 
 - Should make extension functions to convert float and angle to Box2D world floats and radians

@@ -69,3 +69,9 @@ void SystemsHandler::LateUpdateSystems(entt::registry *registry) {
         system->LateUpdate(registry);
     }
 }
+
+void SystemsHandler::InjectServiceLocator(const std::shared_ptr<ServiceLocator>& serviceLocator) {
+    for (const auto& system : locateServicesSystem) {
+        system->LocateServices(serviceLocator);
+    }
+}

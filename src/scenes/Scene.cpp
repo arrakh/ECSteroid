@@ -9,39 +9,40 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-    sysHandle.UnregisterEvents(&registry, &eventListener);
-    sysHandle.UnloadSystems();
+    systemHandler.UnregisterEvents(&registry, &eventListener);
+    systemHandler.UnloadSystems();
 }
 
-void Scene::Start() {
-    RegisterSystems(&sysHandle);
-    sysHandle.SortRenderables();
-    sysHandle.LoadSystems(&registry);
-    sysHandle.RegisterEvents(&registry, &eventListener);
-    sysHandle.InjectPublisher(&eventPublisher);
+void Scene::Start(std::shared_ptr<ServiceLocator> serviceLocator) {
+    RegisterSystems(&systemHandler);
+    systemHandler.SortRenderables();
+    systemHandler.InjectServiceLocator(serviceLocator);
+    systemHandler.LoadSystems(&registry);
+    systemHandler.RegisterEvents(&registry, &eventListener);
+    systemHandler.InjectPublisher(&eventPublisher);
 
     OnStart();
 }
 
 void Scene::Update() {
-    sysHandle.UpdateSystems(&registry);
+    systemHandler.UpdateSystems(&registry);
     OnUpdate();
 }
 
 void Scene::FixedUpdate() {
-    sysHandle.FixedUpdateSystems(&registry);
+    systemHandler.FixedUpdateSystems(&registry);
     OnFixedUpdate();
 }
 
 void Scene::Render(sf::RenderTarget *renderTarget) {
-    sysHandle.RenderSystems(&registry, renderTarget);
+    systemHandler.RenderSystems(&registry, renderTarget);
     OnRender(renderTarget);
 }
 
 void Scene::FinalUpdate() {
-    sysHandle.FinalUpdateSystems(&registry);
+    systemHandler.FinalUpdateSystems(&registry);
 }
 
 void Scene::LateUpdate() {
-    sysHandle.LateUpdateSystems(&registry);
+    systemHandler.LateUpdateSystems(&registry);
 }

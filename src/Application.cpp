@@ -32,11 +32,17 @@ void Application::Run() {
         return;
     }
 
+    serviceLocator = std::make_shared<ServiceLocator>(&servicesHandler);
+
+    RegisterServices();
+
+    servicesHandler.Load();
+
     while (WindowPtr->isOpen())
     {
         Scene* currentScene = new GameScene();
 
-        currentScene->Start();
+        currentScene->Start(serviceLocator);
         fixedTickAccumulator = 0.f;
 
         while (!currentScene->ShouldEnd() && WindowPtr->isOpen())
@@ -45,11 +51,15 @@ void Application::Run() {
         delete currentScene;
     }
 
+    servicesHandler.Unload();
+
     ImGui::SFML::Shutdown(*WindowPtr);
 }
 
 void Application::GameLoop(Scene *currentScene) {
     Time::updateDeltaTime();
+
+    servicesHandler.Update(Time::deltaTime());
 
     for (auto event = sf::Event{}; WindowPtr->pollEvent(event);)
     {
@@ -97,4 +107,8 @@ void Application::GameLoop(Scene *currentScene) {
     WindowPtr->display();
 
     currentScene->FinalUpdate();
+}
+
+void Application::RegisterServices() {
+
 }
