@@ -9,8 +9,10 @@
 #include "../core/ILoadableSystem.h"
 #include "../core/IRenderableSystem.h"
 #include "../core/IEventSubscriberSystem.h"
+#include "../../services/SFMLFontService.h"
+#include "../core/ILocateServicesSystem.h"
 
-class GameOverTextUISystem : public IRenderableSystem, public ILoadableSystem, public IEventSubscriberSystem {
+class GameOverTextUISystem : public IRenderableSystem, public ILoadableSystem, public IEventSubscriberSystem, public ILocateServicesSystem {
     void Load(entt::registry *registry) override;
 
     void Unload() override;
@@ -27,13 +29,16 @@ private:
     sf::RectangleShape blackBg;
     sf::Text gameOverText;
     sf::View uiView;
-    sf::Font gameOverFont;
+    std::shared_ptr<SFMLFontService> fontService;
 
     bool isGameOver = false;
     float alphaProgress = 0;
     float animateDuration = 3.f;
 
     void OnLocalPlayerDestroyed();
+
+public:
+    void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
 };
 
 

@@ -6,29 +6,10 @@
 #include "../components/Sprite.h"
 #include "../components/SFMLTransformable.h"
 #include "../components/SFMLDrawable.h"
-#include <filesystem>
 #include <iostream>
 
-namespace fs = std::filesystem;
-
-void SFMLSpriteSystem::Load(entt::registry *registry) {
-    for (const auto& entry : fs::directory_iterator(OD_TEXTURES_PATH)) {
-        if (!entry.is_regular_file()) continue;
-
-        auto path = entry.path().string();
-
-        sf::Texture texture;
-        if (!texture.loadFromFile(path))
-            throw std::invalid_argument("Trying to load Texture but could not load " + path);
-
-        auto id = entry.path().stem().string();
-        textureMap[id] = texture;
-    }
-
-}
-
-void SFMLSpriteSystem::Unload() {
-
+void SFMLSpriteSystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {
+    textureService = serviceLocator->Locate<SFMLTextureService>();
 }
 
 void SFMLSpriteSystem::Update(entt::registry *registry) {
@@ -40,13 +21,10 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
         auto drawable = registry->try_get<SFMLDrawable>(entity);
         if (drawable != nullptr) throw std::invalid_argument("Trying to create sprite but entity already has Drawable!");
 
-        auto it = textureMap.find(def.spriteName);
-        if (it == textureMap.end()) throw std::invalid_argument("Could not find texture with name " + def.spriteName);
+        auto texture = textureService->Get(def.spriteName);
+        sf::Sprite sprite {*texture};
 
-        auto& texture = it->second;
-        sf::Sprite sprite {texture};
-
-        auto size = texture.getSize();
+        auto size = texture->getSize();
 
         if (def.tiled && def.useCustomDimensions){
             float width = def.useCustomDimensions ? def.customWidth : size.x;
@@ -56,7 +34,7 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
             sprite.setTextureRect(sf::IntRect {0, 0, x, y});
             if (def.center) sprite.setOrigin(width/2.f, height/2.f);
 
-            texture.setRepeated(true);
+            texture->setRepeated(true);
         } else {
             if (def.center){
                 sprite.setOrigin(size.x/2.f, size.y/2.f);
@@ -78,5 +56,6 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
 
     registry->clear<SpriteDefinition>();
 }
+
 
 

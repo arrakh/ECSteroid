@@ -7,6 +7,8 @@
 #include "Application.h"
 #include "imgui-SFML.h"
 #include "events/SFMLEvent.h"
+#include "services/SFMLTextureService.h"
+#include "services/SFMLFontService.h"
 
 float Application::Width = 1920.f;
 float Application::Height = 1080.f;
@@ -110,5 +112,6 @@ void Application::GameLoop(Scene *currentScene) {
 }
 
 void Application::RegisterServices() {
-
+    servicesHandler.Register(new SFMLTextureService());
+    servicesHandler.Register(new SFMLFontService());
 }

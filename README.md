@@ -36,8 +36,8 @@ To Be Added below
   - Difficulty Progression
   - ~~Game Over State~~
 - ~~Service Layer~~
-  - SFMLTextureService
-  - SFMLFontService
+  - ~~SFMLTextureService~~
+  - ~~SFMLFontService~~
   - SFMLScreen
   - SFMLAudioService
 - Audio System
@@ -63,11 +63,8 @@ _Last updated: 2023/7/25_
   - ~~This is possible by introducing a "service"? layer that systems can take a handle on~~ 
   - The above is invalid because a "Service" layer should exist above scenes and on the application layer, and registry should exist only in the scene layer.
 - Should be service:
-  - SFMLTextureService to pre-load on-demand texture
-  - SFMLFontService to pre-load on-demand fonts
   - SFMLScreen for anything window-related
   - InputService to handle keybindings, detection, etc.
-  - SFMLAudioService to load and handle audio playback 
 - Should make extension functions to convert float and angle to Box2D world floats and radians
 - Should have static Screen (or service?) class to reference width and height dynamically
 - There seems to be a lot of systems that require a definition component to construct another component (eg: Box2DPhysicsSystem, SFMLSpriteSystem, etc). There has got to be a better way.

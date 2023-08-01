@@ -9,8 +9,10 @@
 #include "../core/IRenderableSystem.h"
 #include "../core/ILoadableSystem.h"
 #include "../../datatype/Vector2.h"
+#include "../../services/SFMLFontService.h"
+#include "../core/ILocateServicesSystem.h"
 
-class LocalScoreUISystem : public IRenderableSystem, public ILoadableSystem {
+class LocalScoreUISystem : public IRenderableSystem, public ILoadableSystem, public ILocateServicesSystem {
 public:
     void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override;
 
@@ -20,9 +22,13 @@ public:
 
     void Unload() override;
 
+    void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
+
 private:
     sf::Text text;
-    sf::Font font;
+    std::shared_ptr<sf::Font> gameOverFont;
+    std::shared_ptr<SFMLFontService> fontService;
+
     sf::View uiView;
     Vector2 offset {30.f, 20.f };
 

@@ -19,11 +19,7 @@ void GameOverTextUISystem::Load(entt::registry *registry) {
     blackBg.setOrigin(bgSize / 2.f);
     blackBg.setSize(bgSize);
 
-    //should be a font service
-    if (!gameOverFont.loadFromFile("assets/fonts/ethnocentric.otf"))
-        throw std::invalid_argument("COULD NOT FIND FONT");
-
-    gameOverText.setFont(gameOverFont);
+    gameOverText.setFont(*fontService->Get("ethnocentric"));
     gameOverText.setCharacterSize(72);
     gameOverText.setString("Game Over");
     gameOverText.setFillColor(sf::Color{255, 255, 255, 255});
@@ -76,4 +72,8 @@ void GameOverTextUISystem::UnsubscribeEvents(entt::registry *registry, Events::S
 void GameOverTextUISystem::OnLocalPlayerDestroyed() {
     std::cout << "GAME OVER!!!\n";
     isGameOver = true;
+}
+
+void GameOverTextUISystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {
+    fontService = serviceLocator->Locate<SFMLFontService>();
 }

@@ -68,11 +68,7 @@ int LocalScoreUISystem::GetRenderOrder() {
 void LocalScoreUISystem::Load(entt::registry *registry) {
     uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
 
-    //should be a font service
-    if (!font.loadFromFile("assets/fonts/ethnocentric.otf"))
-        throw std::invalid_argument("COULD NOT FIND FONT");
-
-    text.setFont(font);
+    text.setFont(*fontService->Get("ethnocentric"));
     text.setCharacterSize(46);
     text.setString("Score: 0");
     text.setFillColor(sf::Color{255, 255, 255, 255});
@@ -80,4 +76,8 @@ void LocalScoreUISystem::Load(entt::registry *registry) {
 
 void LocalScoreUISystem::Unload() {
 
+}
+
+void LocalScoreUISystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {
+    fontService = serviceLocator->Locate<SFMLFontService>();
 }

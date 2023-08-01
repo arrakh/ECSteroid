@@ -8,20 +8,19 @@
 
 #include "core/ILoadableSystem.h"
 #include "core/IUpdatableSystem.h"
+#include "../services/SFMLTextureService.h"
+#include "core/ILocateServicesSystem.h"
 #include <SFML/Graphics.hpp>
 
-class SFMLSpriteSystem : public ILoadableSystem, public IUpdatableSystem  {
+class SFMLSpriteSystem : public ILocateServicesSystem, public IUpdatableSystem  {
 public:
-    void Load(entt::registry *registry) override;
-
-    void Unload() override;
 
     void Update(entt::registry *registry) override;
 
-private:
-    const std::string OD_TEXTURES_PATH = "assets/textures-on-demand";
+    void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
 
-    std::unordered_map<std::string, sf::Texture> textureMap;
+private:
+    std::shared_ptr<SFMLTextureService> textureService;
 
 };
 
