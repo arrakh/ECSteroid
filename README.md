@@ -39,8 +39,8 @@ To Be Added below
   - ~~SFMLTextureService~~
   - ~~SFMLFontService~~
   - SFMLScreen
-  - SFMLAudioService
-- Audio System
+  - ~~SFMLAudioService~~
+- ~~Audio System~~
 - Scene Management
 - Main Menu
   - Button Entity
@@ -52,12 +52,11 @@ _Last updated: 2023/7/25_
 - Refactor UI and Collision Systems to use inheritance to prevent repeating code
   - Everything in the UI folder should derive from a UISystem
 - Serializable components for entity
-- A component that is created from a definition component should live side by side with the definition
 - (not sure if possible) add "Require" attribute and another attribute that prevents components from being added outside of systems
 - Go through all code and replace magic numbers with consts
 - In-game Debug tool:
   - Hierarchy viewer
-  - Component inspectory
+  - Component inspector
   - System inspector
 - Systems should be decoupled from entt::registry
   - ~~This is possible by introducing a "service"? layer that systems can take a handle on~~ 
@@ -69,3 +68,4 @@ _Last updated: 2023/7/25_
 - Should have static Screen (or service?) class to reference width and height dynamically
 - There seems to be a lot of systems that require a definition component to construct another component (eg: Box2DPhysicsSystem, SFMLSpriteSystem, etc). There has got to be a better way.
   - using entt's on_construct doesn't seem to be allowed (assertion failed), definitely for a good reason
+  - A component that is created from a definition component should live side by side with the definition

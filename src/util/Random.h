@@ -32,7 +32,4 @@ private:
     static std::random_device dev;
 };
 
-std::random_device Random::dev;
-std::mt19937 Random::rng{dev()};
-
 #endif //ECSTEROID_RANDOM_H

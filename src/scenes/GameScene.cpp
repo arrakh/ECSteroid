@@ -30,6 +30,8 @@
 #include "../systems/ui/GameOverTextUISystem.h"
 #include "../systems/AsteroidScoreSystem.h"
 #include "../systems/ui/LocalScoreUISystem.h"
+#include "../systems/GameBGMSystem.h"
+#include "../systems/PlayerShootSFXSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new AsteroidSpawnerSystem());
@@ -45,6 +47,9 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new BulletCollisionSystem());
     handle->Register(new AsteroidToPlayerCollisionSystem());
     handle->Register(new DestroyOnZeroHealthSystem());
+
+    handle->Register(new GameBGMSystem());
+    handle->Register(new PlayerShootSFXSystem());
 
     //UI Systems
     handle->Register(new LocalPlayerHealthUISystem());
