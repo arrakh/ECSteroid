@@ -3,6 +3,8 @@ project(ECSteroid LANGUAGES CXX)
 
 cmake_policy(SET CMP0135 NEW)
 
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+
 add_subdirectory("extern/box2d")
 add_subdirectory("extern/entt")
 include_directories("extern/box2d")
@@ -47,5 +49,9 @@ if (WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET ECSteroid POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:ECSteroid> $<TARGET_FILE_DIR:ECSteroid> COMMAND_EXPAND_LISTS)
 endif()
+
+# Copy required DLLs to output directory during build
+file(COPY "${CMAKE_SOURCE_DIR}/extern/sfml/bin/openal32.dll" DESTINATION "${CMAKE_BINARY_DIR}")
+file(COPY "${CMAKE_SOURCE_DIR}/extern/sfml/bin/sfml-audio-2.dll" DESTINATION "${CMAKE_BINARY_DIR}")
 
 install(TARGETS ECSteroid)

@@ -19,7 +19,7 @@ std::shared_ptr<sf::RenderWindow> Application::WindowPtr;
 
 void Application::Run() {
 
-    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(Width_u, Height_u), "CMake SFML Project");
+    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(Width_u, Height_u), "ECSteroid");
     WindowPtr = window;
     WindowPtr->setFramerateLimit(120);
     WindowPtr->setVerticalSyncEnabled(false);
