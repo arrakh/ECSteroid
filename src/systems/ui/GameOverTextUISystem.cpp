@@ -3,7 +3,7 @@
 //
 
 #include "GameOverTextUISystem.h"
-#include "../../Application.h"
+#include "../../application/Application.h"
 #include "../../components/LocalPlayer.h"
 #include "../../util/Time.h"
 #include "../../datatype/Vector2.h"
@@ -12,7 +12,7 @@
 #include <iostream>
 
 void GameOverTextUISystem::Load(entt::registry *registry) {
-    uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
+    uiView.reset(sf::FloatRect{0, 0 , sfWindow->width, sfWindow->height});
 
     Vector2 bgSize {99999, 99999};
     blackBg.setFillColor(sf::Color{0, 0, 0, 0});
@@ -26,7 +26,7 @@ void GameOverTextUISystem::Load(entt::registry *registry) {
 
     auto bounds = gameOverText.getLocalBounds();
     gameOverText.setOrigin(bounds.left + bounds.width/2.f, bounds.top + bounds.height/2.f);
-    gameOverText.setPosition(Application::Width / 2.f, Application::Height / 2.f - 100);
+    gameOverText.setPosition(sfWindow->width / 2.f, sfWindow->height / 2.f - 100);
 }
 
 void GameOverTextUISystem::Unload() {
@@ -36,11 +36,11 @@ void GameOverTextUISystem::Unload() {
 Vector2 origins{0.0f, 0.0f};
 Vector2 pos {0.0f, 0.0f};
 
-void GameOverTextUISystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
+void GameOverTextUISystem::Render(entt::registry *registry) {
     if (!isGameOver) return;
-    auto window = Application::WindowPtr;
+    auto window = sfWindow->windowPtr;
     auto originalView = window->getView();
-    renderTarget->setView(uiView);
+    window->setView(uiView);
 
     alphaProgress += Time::deltaTime() / animateDuration;
     if (alphaProgress >= 1.f) alphaProgress = 1.f;
@@ -51,10 +51,9 @@ void GameOverTextUISystem::Render(entt::registry *registry, sf::RenderTarget *re
     int textAlpha = std::ceil(255.f * alphaProgress);
     gameOverText.setFillColor(sf::Color{255, 255, 255, static_cast<sf::Uint8>(textAlpha)});
 
-    renderTarget->draw(blackBg);
-    renderTarget->draw(gameOverText);
-
-    renderTarget->setView(originalView);
+    window->draw(blackBg);
+    window->draw(gameOverText);
+    window->setView(originalView);
 }
 
 int GameOverTextUISystem::GetRenderOrder() {

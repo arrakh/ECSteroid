@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <any>
+#include <iostream>
 
 struct Event {
     virtual ~Event() {}
@@ -51,8 +52,9 @@ namespace Events {
         template<typename EventType>
         void Publish(const EventType& event) {
             auto range = eventMap->equal_range(&typeid(event));
-            for(auto it = range.first; it != range.second; ++it)
+            for(auto it = range.first; it != range.second; ++it) {
                 it->second(event);
+            }
         }
     private:
         EventMap* eventMap;

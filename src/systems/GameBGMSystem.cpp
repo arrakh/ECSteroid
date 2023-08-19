@@ -3,9 +3,16 @@
 //
 
 #include "GameBGMSystem.h"
-#include "../services/SFMLAudioService.h"
+
 
 void GameBGMSystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {
-    auto audioService = serviceLocator->Locate<SFMLAudioService>();
+    audioService = serviceLocator->Locate<SFMLAudioService>();
+}
+
+void GameBGMSystem::Load(entt::registry *registry) {
     audioService->PlayBGM("game.ogg", 40.f);
+}
+
+void GameBGMSystem::Unload() {
+    audioService->StopBGM();
 }

@@ -13,13 +13,16 @@ Scene::~Scene() {
     systemHandler.UnloadSystems();
 }
 
-void Scene::Start(std::shared_ptr<ServiceLocator> serviceLocator) {
+void Scene::Start(std::shared_ptr<IWindow> window, std::shared_ptr<ServiceLocator> serviceLocator) {
+    this->window = window;
+
     RegisterSystems(&systemHandler);
     systemHandler.SortRenderables();
+    systemHandler.InjectWindow(window);
     systemHandler.InjectServiceLocator(serviceLocator);
-    systemHandler.LoadSystems(&registry);
     systemHandler.RegisterEvents(&registry, &eventListener);
     systemHandler.InjectPublisher(&eventPublisher);
+    systemHandler.LoadSystems(&registry);
 
     OnStart();
 }
@@ -34,9 +37,9 @@ void Scene::FixedUpdate() {
     OnFixedUpdate();
 }
 
-void Scene::Render(sf::RenderTarget *renderTarget) {
-    systemHandler.RenderSystems(&registry, renderTarget);
-    OnRender(renderTarget);
+void Scene::Render() {
+    systemHandler.RenderSystems(&registry);
+    OnRender();
 }
 
 void Scene::FinalUpdate() {

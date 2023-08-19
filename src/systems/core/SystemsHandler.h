@@ -16,6 +16,8 @@
 #include "IFinalUpdatableSystem.h"
 #include "ILateUpdatableSystem.h"
 #include "ILocateServicesSystem.h"
+#include "../../application/IWindow.h"
+#include "IWindowInjectableSystem.h"
 
 class SystemsHandler {
 private:
@@ -28,10 +30,12 @@ private:
     std::vector<IEventSubscriberSystem*> eventRegistrables;
     std::vector<IEventPublisherSystem*> eventPublishers;
     std::vector<ILocateServicesSystem*> locateServicesSystem;
+    std::vector<IWindowInjectableSystem*> windowInjectableSystem;
 
 public:
     template<typename T>
     void Register(T *system) {
+        if constexpr (std::is_base_of_v<IWindowInjectableSystem, T>) windowInjectableSystem.push_back(std::move(system));
         if constexpr (std::is_base_of_v<ILocateServicesSystem, T>) locateServicesSystem.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IEventSubscriberSystem, T>) eventRegistrables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IEventPublisherSystem, T>) eventPublishers.push_back(std::move(system));
@@ -47,9 +51,10 @@ public:
     void FixedUpdateSystems(entt::registry* registry);
     void FinalUpdateSystems(entt::registry* registry);
     void LateUpdateSystems(entt::registry* registry);
-    void RenderSystems(entt::registry* registry, sf::RenderTarget* renderTarget);
+    void RenderSystems(entt::registry* registry);
     void RegisterEvents(entt::registry* registry, Events::Subscriber* listener);
     void UnregisterEvents(entt::registry* registry, Events::Subscriber* listener);
+    void InjectWindow(std::shared_ptr<IWindow> window);
     void InjectPublisher(Events::Publisher* publisher);
     void InjectServiceLocator(const std::shared_ptr<ServiceLocator>& serviceLocator);
     void LoadSystems(entt::registry* registry);

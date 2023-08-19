@@ -10,19 +10,23 @@
 #include "../../datatype/Vector2.h"
 #include "../core/ILoadableSystem.h"
 #include "../core/IRenderableSystem.h"
-#include "../../Application.h"
+#include "../../application/Application.h"
 
-class LocalPlayerHealthUISystem : public IRenderableSystem, public ILoadableSystem {
+class LocalPlayerHealthUISystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem {
 public:
     void Load(entt::registry *registry) override;
 
-    void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override;
+    void Render(entt::registry *registry) override;
 
     int GetRenderOrder() override;
 
     void Unload() override;
 
+    void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);}
+
 private:
+    std::shared_ptr<SFMLWindow> sfWindow;
+
     sf::RectangleShape healthBgBar;
     sf::RectangleShape healthBar;
     Vector2 barSize { 500, 30 };

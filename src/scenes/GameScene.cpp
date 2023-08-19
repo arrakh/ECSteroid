@@ -14,7 +14,7 @@
 #include "../systems/SFMLSpriteSystem.h"
 #include "../systems/Box2DDebugDrawSystem.h"
 #include "../components/Sprite.h"
-#include "../Application.h"
+#include "../application/Application.h"
 #include "../systems/WrapAroundSystem.h"
 #include "../components/WrapAround.h"
 #include "../components/ShootAbility.h"
@@ -32,8 +32,11 @@
 #include "../systems/ui/LocalScoreUISystem.h"
 #include "../systems/GameBGMSystem.h"
 #include "../systems/PlayerShootSFXSystem.h"
+#include "MenuScene.h"
+#include "../systems/WaveSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
+    handle->Register(new WaveSystem());
     handle->Register(new AsteroidSpawnerSystem());
     handle->Register(new AsteroidScoreSystem());
     handle->Register(new Box2DPhysicsSystem());
@@ -58,9 +61,10 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
 }
 
 void GameScene::OnStart() {
+    sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);
 
-    auto width = Application::Width;
-    auto height = Application::Height;
+    auto width = sfWindow->width;
+    auto height = sfWindow->height;
 
     gameView.setCenter(0.0f, 0.0f);
     gameView.setSize(width, height);
@@ -79,8 +83,8 @@ void GameScene::OnUpdate() {
         return;
     }
 
-    if (ImGui::Button("Reset")){
-        shouldEnd = true;
+    if (ImGui::Button("Quit To Menu")){
+        Application::ChangeScene<MenuScene>();
     }
 
     ImGui::End();
@@ -90,8 +94,8 @@ void GameScene::OnFixedUpdate() {
 
 }
 
-void GameScene::OnRender(sf::RenderTarget *renderTarget) {
-    renderTarget->setView(gameView);
+void GameScene::OnRender() {
+    sfWindow->windowPtr->setView(gameView);
 }
 
 void GameScene::CreatePlayer() {
@@ -144,7 +148,7 @@ void GameScene::CreateBackground() {
     registry.emplace<Position>(bg, Position {Vector2(0, 0)});
     registry.emplace<SpriteDefinition>(bg, SpriteDefinition {
             .spriteName =  "darkPurple", .initialOrder =  -10000, .center = true,
-            .useCustomDimensions = true, .customWidth = Application::Width, .customHeight = Application::Height,
+            .useCustomDimensions = true, .customWidth = sfWindow->width, .customHeight = sfWindow->height,
             .tiled = true
     });
 }

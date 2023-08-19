@@ -5,10 +5,10 @@
 #include "LocalPlayerHealthUISystem.h"
 #include "../../components/LocalPlayer.h"
 #include "../../components/Health.h"
-#include "../../Application.h"
+#include "../../application/Application.h"
 
 void LocalPlayerHealthUISystem::Load(entt::registry *registry) {
-    uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
+    uiView.reset(sf::FloatRect{0, 0 , sfWindow->width, sfWindow->height});
     healthBar.setFillColor(sf::Color::Green);
     healthBgBar.setFillColor(sf::Color::Red);
     healthBgBar.setOutlineColor(sf::Color::White);
@@ -28,10 +28,10 @@ void LocalPlayerHealthUISystem::Unload() {
 
 }
 
-void LocalPlayerHealthUISystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
-    auto window = Application::WindowPtr;
+void LocalPlayerHealthUISystem::Render(entt::registry *registry) {
+    auto window = sfWindow->windowPtr;
     auto originalView = window->getView();
-    renderTarget->setView(uiView);
+    window->setView(uiView);
 
     auto view = registry->view<LocalPlayer, Health>();
 
@@ -47,11 +47,12 @@ void LocalPlayerHealthUISystem::Render(entt::registry *registry, sf::RenderTarge
     healthBar.setSize(Vector2{barSize.x * normalizedHealth, barSize.y});
     healthBgBar.setSize(barSize);
 
-    renderTarget->draw(healthBgBar);
-    renderTarget->draw(healthBar);
-    renderTarget->setView(originalView);
+    window->draw(healthBgBar);
+    window->draw(healthBar);
+    window->setView(originalView);
 }
 
 int LocalPlayerHealthUISystem::GetRenderOrder() {
     return 100;
 }
+

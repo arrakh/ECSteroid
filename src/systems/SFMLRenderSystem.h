@@ -8,12 +8,16 @@
 #include "core/IRenderableSystem.h"
 #include "../events/TestEvent.h"
 #include "core/ILoadableSystem.h"
+#include "core/IWindowInjectableSystem.h"
+#include "../application/SFMLWindow.h"
 
-class SFMLRenderSystem : public IRenderableSystem, public ILoadableSystem {
+class SFMLRenderSystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem {
 public:
-    void Render(entt::registry* registry, sf::RenderTarget* renderTarget) override;
+    void Render(entt::registry* registry) override;
 
     int GetRenderOrder() override;
+
+    void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window); }
 
     void Load(entt::registry *registry) override;
 
@@ -21,7 +25,10 @@ public:
 
     void ApplyTransforms(entt::registry *pRegistry);
 
-    void RenderDrawables(entt::registry *pRegistry, sf::RenderTarget *pTarget);
+    void RenderDrawables(entt::registry *pRegistry);
+
+private:
+    std::shared_ptr<SFMLWindow> sfWindow;
 };
 
 

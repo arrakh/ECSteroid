@@ -1,7 +1,7 @@
-#include "Application.h"
+#include "application/ECSteroidApplication.h"
 
 int main()
 {
-    Application app;
+    ECSteroidApplication app;
     app.Run();
 }

@@ -59,3 +59,7 @@ void SFMLAudioService::PlayBGM(std::string fileNameWithExtension, const float vo
     musicPlayer.setVolume(volume);
     musicPlayer.play();
 }
+
+void SFMLAudioService::StopBGM() {
+    musicPlayer.stop();
+}

@@ -11,10 +11,12 @@
 #include "../../datatype/Vector2.h"
 #include "../../services/SFMLFontService.h"
 #include "../core/ILocateServicesSystem.h"
+#include "../core/IWindowInjectableSystem.h"
+#include "../../application/SFMLWindow.h"
 
-class LocalScoreUISystem : public IRenderableSystem, public ILoadableSystem, public ILocateServicesSystem {
+class LocalScoreUISystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem, public ILocateServicesSystem {
 public:
-    void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override;
+    void Render(entt::registry *registry) override;
 
     int GetRenderOrder() override;
 
@@ -24,7 +26,10 @@ public:
 
     void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
 
+    void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);}
+
 private:
+    std::shared_ptr<SFMLWindow> sfWindow;
     sf::Text text;
     std::shared_ptr<sf::Font> gameOverFont;
     std::shared_ptr<SFMLFontService> fontService;

@@ -3,7 +3,7 @@
 //
 
 #include "LocalScoreUISystem.h"
-#include "../../Application.h"
+#include "../../application/Application.h"
 #include "../../components/LocalPlayer.h"
 #include "../../components/Score.h"
 #include "../../util/Time.h"
@@ -14,21 +14,19 @@ float currentAnimTime = 0.f;
 int currentScore = 0;
 int targetScore = 0;
 
-void LocalScoreUISystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
+void LocalScoreUISystem::Render(entt::registry *registry) {
     int score = GetAnimatedScore(registry);
 
     text.setString("Score: " + std::to_string(score));
     auto bounds = text.getLocalBounds();
     text.setOrigin(bounds.left + bounds.width, 0.f);
-    text.setPosition(Application::Width - offset.x, 0.f + offset.y);
+    text.setPosition(sfWindow->width - offset.x, 0.f + offset.y);
 
-    auto window = Application::WindowPtr;
+    auto window = sfWindow->windowPtr;
     auto originalView = window->getView();
-    renderTarget->setView(uiView);
-
-    renderTarget->draw(text);
-
-    renderTarget->setView(originalView);
+    window->setView(uiView);
+    window->draw(text);
+    window->setView(originalView);
 }
 
 int LocalScoreUISystem::GetAnimatedScore(const entt::registry *registry) const {
@@ -66,7 +64,7 @@ int LocalScoreUISystem::GetRenderOrder() {
 }
 
 void LocalScoreUISystem::Load(entt::registry *registry) {
-    uiView.reset(sf::FloatRect{0, 0 ,Application::Width ,Application::Height});
+    uiView.reset(sf::FloatRect{0, 0 , sfWindow->width, sfWindow->height});
 
     text.setFont(*fontService->Get("ethnocentric"));
     text.setCharacterSize(46);

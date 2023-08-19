@@ -6,10 +6,11 @@
 #include "imgui.h"
 #include "Box2DDebugDrawSystem.h"
 #include "../datatype/Vector2.h"
+#include "../application/SFMLWindow.h"
 
 bool Box2DDebugDrawSystem::shouldDraw = true;
 
-void Box2DDebugDrawSystem::Render(entt::registry *registry, sf::RenderTarget *renderTarget) {
+void Box2DDebugDrawSystem::Render(entt::registry *registry) {
     if (!shouldDraw) return;
 
     auto dataView = registry->view<Box2DDebugData, PhysicsBody>();
@@ -23,7 +24,7 @@ void Box2DDebugDrawSystem::Render(entt::registry *registry, sf::RenderTarget *re
         data.shape->setPosition(Vector2 { pos });
         data.shape->setRotation(rot * 180.f / b2_pi);
 
-        renderTarget->draw(*data.shape);
+        sfWindow->windowPtr->draw(*data.shape);
     }
 }
 

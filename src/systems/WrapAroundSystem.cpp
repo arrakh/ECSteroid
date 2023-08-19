@@ -5,12 +5,12 @@
 #include <iostream>
 #include "../components/Position.h"
 #include "WrapAroundSystem.h"
-#include "../Application.h"
+#include "../application/Application.h"
 #include "../components/WrapAround.h"
 #include "../components/PhysicsBody.h"
 
 void WrapAroundSystem::Update(entt::registry *registry) {
-    auto& window = *Application::WindowPtr;
+    auto& window = *sfWindow->windowPtr;
 
     Vector2 bottomRight {window.mapPixelToCoords(sf::Vector2i{window.getSize()})};
     Vector2 topLeft {window.mapPixelToCoords(sf::Vector2i{0, 0})};
@@ -24,7 +24,7 @@ void WrapAroundSystem::Update(entt::registry *registry) {
 }
 
 void WrapAroundSystem::FixedUpdate(entt::registry *registry) {
-    auto& window = *Application::WindowPtr;
+    auto& window = *sfWindow->windowPtr;
 
     Vector2 bottomRight {window.mapPixelToCoords(sf::Vector2i{window.getSize()})};
     Vector2 topLeft {window.mapPixelToCoords(sf::Vector2i{0, 0})};

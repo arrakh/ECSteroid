@@ -7,11 +7,19 @@
 
 
 #include "core/ILocateServicesSystem.h"
+#include "core/ILoadableSystem.h"
+#include "../services/SFMLAudioService.h"
 
-class GameBGMSystem : public ILocateServicesSystem {
+class GameBGMSystem : public ILocateServicesSystem, public ILoadableSystem {
 public:
     void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
 
+    void Load(entt::registry *registry) override;
+
+    void Unload() override;
+
+private:
+    std::shared_ptr<SFMLAudioService> audioService;
 };
 
 

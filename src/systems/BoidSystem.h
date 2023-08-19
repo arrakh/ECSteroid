@@ -10,8 +10,10 @@
 #include "../components/Boid.h"
 #include "../components/Position.h"
 #include "core/ILoadableSystem.h"
+#include "core/IWindowInjectableSystem.h"
+#include "../application/SFMLWindow.h"
 
-class BoidSystem : public IUpdatableSystem, public ILoadableSystem {
+class BoidSystem : public IUpdatableSystem, public IWindowInjectableSystem, public ILoadableSystem {
 public:
     void Update(entt::registry *registry) override;
 
@@ -22,7 +24,10 @@ public:
 public:
     void Load(entt::registry *registry) override;
 
+    void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);}
+
 private:
+    std::shared_ptr<SFMLWindow> sfWindow;
     void BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, Position& pos);
     Vector2 Flock(entt::registry * registry, Boid& boid, Position& pos, float distance, float power);
     Vector2 Align(entt::registry * registry, Boid& boid, Position& pos, float distance, float power);

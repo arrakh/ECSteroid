@@ -29,6 +29,8 @@ public:
 
     void PlayBGM(std::string fileName, float volume = 100.f);
 
+    void StopBGM();
+
 private:
     static const int MAX_CONCURRENT_SFX = 24;
     const std::string SFX_PATH = "assets/sfx";

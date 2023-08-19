@@ -13,17 +13,6 @@ Libraries used:
 - Box2D for Physics
 - EnTT for ECS
 
-# Engine Principles
-The engine is divided into 5 crucial parts: Scenes, Entities, Components, Systems, and Events.
-
-To Be Added below
-### Scenes
-### Services
-### Entities
-### Components
-### Systems
-### Events
-
 # Project Roadmap
 - ~~External Library Implementations~~
 - ~~Base Engine Architecture~~
@@ -38,17 +27,22 @@ To Be Added below
 - ~~Service Layer~~
   - ~~SFMLTextureService~~
   - ~~SFMLFontService~~
-  - SFMLScreen
   - ~~SFMLAudioService~~
 - ~~Audio System~~
-- Scene Management
+- ~~Scene Management~~
+- ~~IWindow~~
 - Main Menu
   - Button Entity
   - UI Design
-- Game Particles
 
 # Improvement Notes
-_Last updated: 2023/7/25_
+_Last updated: 2023/8/2_
+- Shouldn't unload from destructor
+- Extract the architecture here into a framework. What's needed:
+  - Application must be inheritable to describe scenes and services
+  - Scenes shouldn't be handled by Application, should be handled by a SceneHandler
+  - Services Dependency Injection system
+  - SFML handled through an IWindow (which exists and overridable through application)
 - Refactor UI and Collision Systems to use inheritance to prevent repeating code
   - Everything in the UI folder should derive from a UISystem
 - Serializable components for entity

@@ -11,13 +11,15 @@
 #include "../core/IEventSubscriberSystem.h"
 #include "../../services/SFMLFontService.h"
 #include "../core/ILocateServicesSystem.h"
+#include "../core/IWindowInjectableSystem.h"
+#include "../../application/SFMLWindow.h"
 
-class GameOverTextUISystem : public IRenderableSystem, public ILoadableSystem, public IEventSubscriberSystem, public ILocateServicesSystem {
+class GameOverTextUISystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem, public IEventSubscriberSystem, public ILocateServicesSystem {
     void Load(entt::registry *registry) override;
 
     void Unload() override;
 
-    void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override;
+    void Render(entt::registry *registry) override;
 
     int GetRenderOrder() override;
 
@@ -25,7 +27,10 @@ class GameOverTextUISystem : public IRenderableSystem, public ILoadableSystem, p
 
     void UnsubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
 
+    void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);}
+
 private:
+    std::shared_ptr<SFMLWindow> sfWindow;
     sf::RectangleShape blackBg;
     sf::Text gameOverText;
     sf::View uiView;

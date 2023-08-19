@@ -10,9 +10,9 @@ void SystemsHandler::UpdateSystems(entt::registry* registry) {
     }
 }
 
-void SystemsHandler::RenderSystems(entt::registry* registry, sf::RenderTarget* renderTarget) {
+void SystemsHandler::RenderSystems(entt::registry* registry) {
     for (const auto& system : renderables) {
-        system->Render(registry, renderTarget);
+        system->Render(registry);
     }
 }
 
@@ -73,5 +73,11 @@ void SystemsHandler::LateUpdateSystems(entt::registry *registry) {
 void SystemsHandler::InjectServiceLocator(const std::shared_ptr<ServiceLocator>& serviceLocator) {
     for (const auto& system : locateServicesSystem) {
         system->LocateServices(serviceLocator);
+    }
+}
+
+void SystemsHandler::InjectWindow(std::shared_ptr<IWindow> window) {
+    for (const auto& system : windowInjectableSystem) {
+        system->OnInject(window);
     }
 }

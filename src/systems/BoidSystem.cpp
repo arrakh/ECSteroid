@@ -5,7 +5,7 @@
 #include <iostream>
 #include <random>
 #include "BoidSystem.h"
-#include "../Application.h"
+#include "../application/Application.h"
 #include "../util/Time.h"
 #include "../components/debug/DebugName.h"
 #include "../components/Sprite.h"
@@ -32,8 +32,8 @@ void BoidSystem::Update(entt::registry *registry) {
 
 void BoidSystem::BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, Position& pos)
 {
-    float hw = Application::Width / 2.f;
-    float hh = Application::Height / 2.f;
+    float hw = sfWindow->width / 2.f;
+    float hh = sfWindow->height / 2.f;
 
     float pad = 100.f;
     float turn = .5f;
@@ -118,8 +118,8 @@ void BoidSystem::Load(entt::registry *registry) {
                 .useCustomDimensions = true, .customWidth = size.y, .customHeight = size.x
         });
 
-        float hw = Application::Width / 2.f;
-        float hh = Application::Height / 2.f;
+        float hw = sfWindow->width / 2.f;
+        float hh = sfWindow->height / 2.f;
 
         std::random_device dev;
         std::mt19937 rng{dev()};

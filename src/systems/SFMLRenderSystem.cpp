@@ -9,9 +9,9 @@
 #include "../components/SFMLTransformable.h"
 #include "../components/SFMLDrawable.h"
 
-void SFMLRenderSystem::Render(entt::registry* registry, sf::RenderTarget* renderTarget) {
+void SFMLRenderSystem::Render(entt::registry* registry) {
     ApplyTransforms(registry);
-    RenderDrawables(registry, renderTarget);
+    RenderDrawables(registry);
 }
 
 int SFMLRenderSystem::GetRenderOrder() {
@@ -31,14 +31,14 @@ void SFMLRenderSystem::ApplyTransforms(entt::registry *registry) {
     }
 }
 
-void SFMLRenderSystem::RenderDrawables(entt::registry *registry, sf::RenderTarget *target) {
+void SFMLRenderSystem::RenderDrawables(entt::registry *registry) {
     registry->sort<SFMLDrawable>([](const SFMLDrawable& left, const SFMLDrawable& right){
         return left.order < right.order;
     });
 
     auto view = registry->view<SFMLDrawable>();
     for (auto [entity, comp] : view.each()) {
-        target->draw(*comp.drawable);
+        sfWindow->windowPtr->draw(*comp.drawable);
     }
 }
 

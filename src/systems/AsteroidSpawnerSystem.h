@@ -10,19 +10,16 @@
 #include "core/ILoadableSystem.h"
 #include "../datatype/Vector2.h"
 #include "../components/Asteroid.h"
+#include "../datatype/CreateAsteroidParameter.h"
 
-class AsteroidSpawnerSystem : public IEventSubscriberSystem, public ILoadableSystem {
+class AsteroidSpawnerSystem : public IEventSubscriberSystem {
 public:
     void SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
 
     void UnsubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
 
-    void Load(entt::registry *registry) override;
-
-    void Unload() override;
-
 private:
-    static void CreateAsteroid(entt::registry *registry, Asteroid definition, Vector2 pos, Vector2 velocity);
+    static void CreateAsteroid(entt::registry *registry, CreateAsteroidParameter param);
 
     void OnAsteroidDestroyed(entt::registry &registry, entt::entity entity);
 };

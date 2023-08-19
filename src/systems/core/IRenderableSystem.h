@@ -8,10 +8,11 @@
 
 #include "SFML/Graphics.hpp"
 #include "entt/entt.hpp"
+#include "../../application/IWindow.h"
 
 class IRenderableSystem {
 public:
-    virtual void Render(entt::registry* registry, sf::RenderTarget* renderTarget) = 0;
+    virtual void Render(entt::registry* registry) = 0;
     virtual int GetRenderOrder() = 0;
 };
 

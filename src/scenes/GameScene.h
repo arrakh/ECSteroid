@@ -7,6 +7,7 @@
 
 
 #include "Scene.h"
+#include "../application/SFMLWindow.h"
 
 class GameScene : public Scene {
 protected:
@@ -18,9 +19,11 @@ protected:
 
     void OnFixedUpdate() override;
 
-    void OnRender(sf::RenderTarget *renderTarget) override;
+    void OnRender() override;
 
 private:
+    std::shared_ptr<SFMLWindow> sfWindow;
+
     sf::View gameView;
 
     void CreatePlayer();
