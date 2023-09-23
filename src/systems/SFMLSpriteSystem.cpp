@@ -50,7 +50,7 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
 
         auto spritePtr = std::make_shared<sf::Sprite>(sprite);
 
-        registry->emplace<SFMLTransformable>(entity, SFMLTransformable { spritePtr, def.initialAngle });
+        registry->emplace<SFMLTransformable>(entity, SFMLTransformable { spritePtr });
         registry->emplace<SFMLDrawable>(entity, SFMLDrawable { def.initialOrder, spritePtr });
     }
 

@@ -8,6 +8,7 @@
 #include "../components/Rotation.h"
 #include "../components/SFMLTransformable.h"
 #include "../components/SFMLDrawable.h"
+#include "../components/SFMLViewTarget.h"
 
 void SFMLRenderSystem::Render(entt::registry* registry) {
     ApplyTransforms(registry);
@@ -24,10 +25,10 @@ void SFMLRenderSystem::ApplyTransforms(entt::registry *registry) {
     for (auto [entity, t] : view.each()) {
 
         auto posData = registry->try_get<Position>(entity);
-        if (posData != nullptr) t.transformable->setPosition(posData->vector.x + t.offsetPosition.x, posData->vector.y + t.offsetPosition.y);
+        if (posData != nullptr) t.transformable->setPosition(posData->vector.x, posData->vector.y);
 
         auto rotData = registry->try_get<Rotation>(entity);
-        if (rotData != nullptr) { t.transformable->setRotation(rotData->value + t.offsetAngle); }
+        if (rotData != nullptr) { t.transformable->setRotation(rotData->value); }
     }
 }
 
@@ -36,14 +37,23 @@ void SFMLRenderSystem::RenderDrawables(entt::registry *registry) {
         return left.order < right.order;
     });
 
-    auto view = registry->view<SFMLDrawable>();
-    for (auto [entity, comp] : view.each()) {
+    auto defaultView = sfWindow->windowPtr->getView();
+
+    auto drawables = registry->view<SFMLDrawable>();
+    for (auto [entity, comp] : drawables.each()) {
+        auto viewTarget = registry->try_get<SFMLViewTarget>(entity);
+        auto view = viewTarget != nullptr ? *viewTarget->targetView : defaultView;
+        sfWindow->windowPtr->setView(view);
         sfWindow->windowPtr->draw(*comp.drawable);
     }
+
+
+
 }
 
 void SFMLRenderSystem::Load(entt::registry *registry) {
     registry->sort<SFMLTransformable, SFMLDrawable>();
+    registry->sort<SFMLDrawable, SFMLViewTarget>();
 }
 
 void SFMLRenderSystem::Unload() {
