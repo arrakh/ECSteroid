@@ -11,7 +11,7 @@
 struct SpriteDefinition {
     std::string spriteName;
     const int initialOrder = 0;
-    const bool center = true;
+    const Vector2 pivot = Vector2{0.5f, 0.5f};
 
     const bool useCustomDimensions = false;
     const float customWidth = 0;

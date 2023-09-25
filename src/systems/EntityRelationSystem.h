@@ -12,7 +12,7 @@ class EntityRelationSystem : public IUpdatableSystem {
 public:
     void Update(entt::registry *registry) override;
 
-    static void Assign(entt::registry& registry, entt::entity parent, entt::entity child);
+    static void Assign(entt::registry *registry, entt::entity parent, entt::entity child);
 };
 
 

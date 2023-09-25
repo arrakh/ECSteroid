@@ -5,7 +5,7 @@
 #include "LocalPlayerHealthUISystem.h"
 #include "../../components/LocalPlayer.h"
 #include "../../components/Health.h"
-#include "../../application/Application.h"
+#include "../../components/SFMLViewTarget.h"
 
 void LocalPlayerHealthUISystem::Load(entt::registry *registry) {
     uiView.reset(sf::FloatRect{0, 0 , sfWindow->width, sfWindow->height});
@@ -22,6 +22,8 @@ void LocalPlayerHealthUISystem::Load(entt::registry *registry) {
 
     healthBar.setPosition(barOffset);
     healthBgBar.setPosition(barOffset);
+
+
 }
 
 void LocalPlayerHealthUISystem::Unload() {

@@ -37,9 +37,15 @@
 #include "../systems/EntityRelationSystem.h"
 #include "../components/LocalPosition.h"
 #include "../components/LocalRotation.h"
+#include "../systems/ui/SFMLButtonSystem.h"
+#include "../systems/ui/SFMLButtonStatesSpriteSystem.h"
+#include "../systems/ui/SFMLButtonDebugDrawSystem.h"
+#include "../systems/ui/SFMLTextSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new EntityRelationSystem());
+    handle->Register(new SFMLButtonSystem());
+    handle->Register(new SFMLButtonStatesSpriteSystem());
     handle->Register(new WaveSystem());
     handle->Register(new AsteroidSpawnerSystem());
     handle->Register(new AsteroidScoreSystem());
@@ -47,6 +53,7 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new LocalPlayerMovementSystem());
     handle->Register(new SFMLRenderSystem());
     handle->Register(new SFMLSpriteSystem());
+    handle->Register(new SFMLTextSystem());
     handle->Register(new Box2DDebugDrawSystem());
     handle->Register(new WrapAroundSystem());
     handle->Register(new PlayerShootSystem());
@@ -144,30 +151,6 @@ void GameScene::CreatePlayer() {
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(player);
 
     registry.emplace<PhysicsDefinition>(player, PhysicsDefinition {bodyDef, fixtureDef, rect});
-
-    auto testEnt = registry.create();
-    EntityRelationSystem::Assign(registry, player, testEnt);
-    registry.emplace<Position>(testEnt, Position {Vector2(0.0f, 0.0f)});
-    registry.emplace<Rotation>(testEnt, Rotation {0.0f});
-    registry.emplace<LocalPosition>(testEnt, LocalPosition {Vector2(50.0f, 10.0f)});
-    registry.emplace<LocalRotation>(testEnt, LocalRotation {90.0f});
-
-    registry.emplace<SpriteDefinition>(testEnt, SpriteDefinition {
-            .spriteName =  "meteorGrey_big2", .initialOrder =  1,
-            .useCustomDimensions = true, .customWidth = 20.f, .customHeight = 20.f
-    });
-
-    auto testEnt2 = registry.create();
-    EntityRelationSystem::Assign(registry, testEnt, testEnt2);
-    registry.emplace<Position>(testEnt2, Position {Vector2(0.0f, 0.0f)});
-    registry.emplace<Rotation>(testEnt2, Rotation {0.0f});
-    registry.emplace<LocalPosition>(testEnt2, LocalPosition {Vector2(50.0f, 10.0f)});
-    registry.emplace<LocalRotation>(testEnt2, LocalRotation {0.0f});
-
-    registry.emplace<SpriteDefinition>(testEnt2, SpriteDefinition {
-            .spriteName =  "meteorGrey_big2", .initialOrder =  1,
-            .useCustomDimensions = true, .customWidth = 20.f, .customHeight = 20.f
-    });
 }
 
 void GameScene::CreateBackground() {
@@ -175,7 +158,7 @@ void GameScene::CreateBackground() {
 
     registry.emplace<Position>(bg, Position {Vector2(0, 0)});
     registry.emplace<SpriteDefinition>(bg, SpriteDefinition {
-            .spriteName =  "darkPurple", .initialOrder =  -10000, .center = true,
+            .spriteName =  "darkPurple", .initialOrder =  -10000,
             .useCustomDimensions = true, .customWidth = sfWindow->width, .customHeight = sfWindow->height,
             .tiled = true
     });

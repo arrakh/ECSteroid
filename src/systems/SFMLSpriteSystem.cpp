@@ -6,6 +6,7 @@
 #include "../components/Sprite.h"
 #include "../components/SFMLTransformable.h"
 #include "../components/SFMLDrawable.h"
+#include "../components/SFMLSprite.h"
 #include <iostream>
 
 void SFMLSpriteSystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {
@@ -26,19 +27,17 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
 
         auto size = texture->getSize();
 
-        if (def.tiled && def.useCustomDimensions){
+        if (def.tiled){
             float width = def.useCustomDimensions ? def.customWidth : size.x;
             float height = def.useCustomDimensions ? def.customHeight : size.y;
             int x = std::floor(width);
             int y = std::floor(height);
             sprite.setTextureRect(sf::IntRect {0, 0, x, y});
-            if (def.center) sprite.setOrigin(width/2.f, height/2.f);
+            sprite.setOrigin(width * def.pivot.x, height * def.pivot.y);
 
             texture->setRepeated(true);
         } else {
-            if (def.center){
-                sprite.setOrigin(size.x/2.f, size.y/2.f);
-            }
+            sprite.setOrigin(size.x * def.pivot.x, size.y * def.pivot.y);
 
             if (def.useCustomDimensions){
                 float scaleX = def.customWidth / size.x;
@@ -50,6 +49,7 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
 
         auto spritePtr = std::make_shared<sf::Sprite>(sprite);
 
+        registry->emplace<SFMLSprite>(entity, SFMLSprite { spritePtr });
         registry->emplace<SFMLTransformable>(entity, SFMLTransformable { spritePtr });
         registry->emplace<SFMLDrawable>(entity, SFMLDrawable { def.initialOrder, spritePtr });
     }

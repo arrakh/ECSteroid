@@ -27,10 +27,10 @@ public:
 
 protected:
     virtual void RegisterSystems(SystemsHandler* handle) = 0;
-    virtual void OnStart() = 0;
-    virtual void OnUpdate() = 0;
-    virtual void OnFixedUpdate() = 0;
-    virtual void OnRender() = 0;
+    virtual void OnStart() { }
+    virtual void OnUpdate() { }
+    virtual void OnFixedUpdate() { }
+    virtual void OnRender() { }
 
     entt::registry registry;
     std::shared_ptr<IWindow> window;

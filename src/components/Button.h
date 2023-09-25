@@ -9,22 +9,22 @@
 #include <functional>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include "../datatype/Vector2.h"
 
 enum ButtonState { NORMAL, HIGHLIGHTED, PRESSED };
 
 struct ButtonDefinition {
-    const std::function<void()>& callback;
-    sf::View* viewTarget;
-    const sf::FloatRect rect;
+    Vector2 size;
+    Vector2 pivot = {0.5f, 0.5f};
+
+    std::function<void()> callback;
 };
 
 struct Button {
-    const std::function<void()>& callback;
-    ButtonState lastState;
-    ButtonState currentState;
-    sf::View* viewTarget;
-    sf::Sprite* sprite;
+    std::function<void()> callback;
     const sf::FloatRect rect;
+    bool active = true;
+    ButtonState state;
 };
 
 struct ButtonStateSpritesDefinition {
@@ -34,9 +34,9 @@ struct ButtonStateSpritesDefinition {
 };
 
 struct ButtonStateSprites{
-    sf::Texture* normalTexture;
-    sf::Texture* highlightedTexture;
-    sf::Texture* pressedTexture;
+    std::shared_ptr<sf::Texture> normalTexture;
+    std::shared_ptr<sf::Texture> highlightedTexture;
+    std::shared_ptr<sf::Texture> pressedTexture;
 };
 
 

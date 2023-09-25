@@ -13,6 +13,7 @@
 #include "../core/ILocateServicesSystem.h"
 #include "../core/IWindowInjectableSystem.h"
 #include "../../application/SFMLWindow.h"
+#include "../../datatype/Vector2.h"
 
 class GameOverTextUISystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem, public IEventSubscriberSystem, public ILocateServicesSystem {
     void Load(entt::registry *registry) override;
@@ -40,7 +41,11 @@ private:
     float alphaProgress = 0;
     float animateDuration = 3.f;
 
+    entt::registry* lastRegistry;
+
     void OnLocalPlayerDestroyed();
+
+    void CreateButton(entt::registry *registry, Vector2 position, const std::string text, std::function<void()> callback);
 
 public:
     void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;

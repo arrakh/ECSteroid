@@ -8,11 +8,20 @@
 #include "../../util/Time.h"
 #include "../../datatype/Vector2.h"
 #include "imgui.h"
+#include "../../components/Sprite.h"
+#include "../../components/Button.h"
+#include "../../components/SFMLViewTarget.h"
+#include "../../components/Position.h"
+#include "../EntityRelationSystem.h"
+#include "../../components/SFMLText.h"
+#include "../../scenes/MenuScene.h"
 #include <cmath>
 #include <iostream>
 
 void GameOverTextUISystem::Load(entt::registry *registry) {
     uiView.reset(sf::FloatRect{0, 0 , sfWindow->width, sfWindow->height});
+    uiView.setViewport(sf::FloatRect{0, 0, 1, 1});
+    uiView.setCenter(0, 0);
 
     Vector2 bgSize {99999, 99999};
     blackBg.setFillColor(sf::Color{0, 0, 0, 0});
@@ -26,10 +35,38 @@ void GameOverTextUISystem::Load(entt::registry *registry) {
 
     auto bounds = gameOverText.getLocalBounds();
     gameOverText.setOrigin(bounds.left + bounds.width/2.f, bounds.top + bounds.height/2.f);
-    gameOverText.setPosition(sfWindow->width / 2.f, sfWindow->height / 2.f - 100);
+    gameOverText.setPosition(0, -100);
 }
 
 void GameOverTextUISystem::Unload() {
+
+}
+
+void GameOverTextUISystem::CreateButton(entt::registry *registry, Vector2 position, const std::string text, std::function<void()> callback) {
+    auto button = registry->create();
+    registry->emplace<SpriteDefinition>(button, SpriteDefinition {
+            .spriteName =  "btn-normal", .initialOrder =  701,
+            .useCustomDimensions = true, .customWidth = 300, .customHeight = 80
+    });
+
+    registry->emplace<ButtonDefinition>(button, ButtonDefinition {.size = Vector2{300, 80}, .callback = callback});
+
+    registry->emplace<Position>(button, Position {position });
+
+    registry->emplace<SFMLViewTarget>(button, SFMLViewTarget{&uiView});
+
+    registry->emplace<ButtonStateSpritesDefinition>(button, ButtonStateSpritesDefinition {
+            .normalSpriteName = "btn-normal",
+            .highlightedSpriteName = "btn-hover",
+            .pressedSpriteName = "btn-pressed"
+    });
+
+    auto childText = registry->create();
+    EntityRelationSystem::Assign(registry, button, childText);
+
+    registry->emplace<SFMLText>(childText, SFMLText {text, 52, sf::Color::White, "ethnocentric", 702} );
+    registry->emplace<Position>(childText, Position {Vector2{0,0}});
+    registry->emplace<SFMLViewTarget>(childText, SFMLViewTarget{&uiView});
 
 }
 
@@ -61,6 +98,7 @@ int GameOverTextUISystem::GetRenderOrder() {
 }
 
 void GameOverTextUISystem::SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) {
+    lastRegistry = registry;
     registry->on_destroy<LocalPlayer>().connect<&GameOverTextUISystem::OnLocalPlayerDestroyed>(this);
 }
 
@@ -71,6 +109,9 @@ void GameOverTextUISystem::UnsubscribeEvents(entt::registry *registry, Events::S
 void GameOverTextUISystem::OnLocalPlayerDestroyed() {
     std::cout << "GAME OVER!!!\n";
     isGameOver = true;
+
+    CreateButton(lastRegistry, Vector2(0, 120), "Retry", [](){ Application::ChangeScene<GameScene>(); });
+    CreateButton(lastRegistry, Vector2(0, 220), "Quit", [](){ Application::ChangeScene<MenuScene>(); });
 }
 
 void GameOverTextUISystem::LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) {

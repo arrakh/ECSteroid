@@ -11,13 +11,6 @@
 class MenuScene : public Scene {
     void RegisterSystems(SystemsHandler *handle) override;
 
-    void OnStart() override;
-
-    void OnUpdate() override;
-
-    void OnFixedUpdate() override;
-
-    void OnRender() override;
 
 };
 

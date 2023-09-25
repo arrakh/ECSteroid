@@ -48,17 +48,17 @@ void EntityRelationSystem::Update(entt::registry *registry) {
     }
 }
 
-void EntityRelationSystem::Assign(entt::registry &registry, entt::entity parent, entt::entity child) {
-    if (!registry.valid(parent) || !registry.valid(child)) return;
+void EntityRelationSystem::Assign(entt::registry *registry, entt::entity parent, entt::entity child) {
+    if (!registry->valid(parent) || !registry->valid(child)) return;
 
-    auto& relationship = registry.get_or_emplace<Relation>(child);
+    auto& relationship = registry->get_or_emplace<Relation>(child);
     relationship.parent = parent;
 
-    auto& parentRelationship = registry.get_or_emplace<Relation>(parent);
+    auto& parentRelationship = registry->get_or_emplace<Relation>(parent);
     if (parentRelationship.children == 0) {
         parentRelationship.first = child;
     } else {
-        auto& siblingRelationship = registry.get<Relation>(parentRelationship.first);
+        auto& siblingRelationship = registry->get<Relation>(parentRelationship.first);
         siblingRelationship.prev = child;
         relationship.next = parentRelationship.first;
         parentRelationship.first = child;
