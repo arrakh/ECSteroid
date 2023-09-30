@@ -6,7 +6,7 @@
 #include "Box2DPhysicsSystem.h"
 #include "../util/Time.h"
 #include "../components/Rotation.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../events/CollisionEvent.h"
 
 
@@ -55,8 +55,8 @@ void Box2DPhysicsSystem::UpdateTransform(entt::registry *registry, entt::entity 
 
     //comp.body->ApplyForceToCenter(, true);
 
-    if (registry->any_of<Position>(entity)){
-        registry->patch<Position>(entity, [&comp](Position& pos) {
+    if (registry->any_of<WorldPosition>(entity)){
+        registry->patch<WorldPosition>(entity, [&comp](WorldPosition& pos) {
             auto ppos = comp.body->GetPosition();
             pos.vector = Vector2 { ppos};
             //std::cout << "PHYSICS POSITION IS X: " << ppos.x << " Y: " << ppos.y << "\n";

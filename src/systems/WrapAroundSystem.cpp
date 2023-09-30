@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "WrapAroundSystem.h"
 #include "../application/Application.h"
 #include "../components/WrapAround.h"
@@ -15,11 +15,11 @@ void WrapAroundSystem::Update(entt::registry *registry) {
     Vector2 bottomRight {window.mapPixelToCoords(sf::Vector2i{window.getSize()})};
     Vector2 topLeft {window.mapPixelToCoords(sf::Vector2i{0, 0})};
 
-    auto view = registry->view<Position, WrapAround>(entt::exclude<PhysicsBody>);
+    auto view = registry->view<WorldPosition, WrapAround>(entt::exclude<PhysicsBody>);
     for (auto [entity, pos] : view.each()) {
         auto newPos = GetWrappedPosition(pos.vector, topLeft, bottomRight);
 
-        registry->patch<Position>(entity, [&newPos](Position& pos){pos.vector = newPos;});
+        registry->patch<WorldPosition>(entity, [&newPos](WorldPosition& pos){ pos.vector = newPos;});
     }
 }
 
@@ -29,7 +29,7 @@ void WrapAroundSystem::FixedUpdate(entt::registry *registry) {
     Vector2 bottomRight {window.mapPixelToCoords(sf::Vector2i{window.getSize()})};
     Vector2 topLeft {window.mapPixelToCoords(sf::Vector2i{0, 0})};
 
-    auto view = registry->view<Position, PhysicsBody, WrapAround>();
+    auto view = registry->view<WorldPosition, PhysicsBody, WrapAround>();
     for (auto [entity, pos, physicsData] : view.each()) {
         if (!physicsData.body->IsEnabled()) continue;
 
@@ -37,7 +37,7 @@ void WrapAroundSystem::FixedUpdate(entt::registry *registry) {
 
         physicsData.body->SetTransform(newPos, physicsData.body->GetAngle());
 
-        registry->patch<Position>(entity, [&newPos](Position& pos){pos.vector = newPos;});
+        registry->patch<WorldPosition>(entity, [&newPos](WorldPosition& pos){ pos.vector = newPos;});
     }
 }
 

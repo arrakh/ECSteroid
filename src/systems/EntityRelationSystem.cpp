@@ -2,20 +2,22 @@
 // Created by Arya Rakha on 9/24/2023.
 //
 
+#include <iostream>
 #include "EntityRelationSystem.h"
 #include "../components/Relation.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Rotation.h"
 #include "../components/LocalPosition.h"
 #include "../components/LocalRotation.h"
+#include "../components/debug/DebugName.h"
 
 void EntityRelationSystem::Update(entt::registry *registry) {
     auto view = registry->view<Relation>();
     for (auto [entity, relationship] : view.each()) {
         if (!registry->valid(relationship.parent)) continue;
 
-        auto childPosition = registry->try_get<Position>(entity);
-        auto parentPosition = registry->try_get<Position>(relationship.parent);
+        auto childPosition = registry->try_get<WorldPosition>(entity);
+        auto parentPosition = registry->try_get<WorldPosition>(relationship.parent);
 
         if (childPosition != nullptr && parentPosition != nullptr) {
 
@@ -31,7 +33,7 @@ void EntityRelationSystem::Update(entt::registry *registry) {
             float newX = parentPosition->vector.x + (childLocalX * cosAngle - childLocalY * sinAngle);
             float newY = parentPosition->vector.y + (childLocalX * sinAngle + childLocalY * cosAngle);
 
-            registry->patch<Position>(entity, [&newX, &newY](Position& pos){
+            registry->patch<WorldPosition>(entity, [&newX, &newY](WorldPosition& pos){
                 pos.vector.x = newX;
                 pos.vector.y = newY;
             });

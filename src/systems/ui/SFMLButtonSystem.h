@@ -9,7 +9,7 @@
 #include "../core/IUpdatableSystem.h"
 #include "../core/IWindowInjectableSystem.h"
 #include "../../application/SFMLWindow.h"
-#include "../../components/Button.h"
+#include "../../components/ButtonObject.h"
 
 class SFMLButtonSystem : public IUpdatableSystem, public IWindowInjectableSystem {
 public:
@@ -17,7 +17,7 @@ public:
     void OnInject(std::shared_ptr<IWindow> window) override { sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);}
 
 private:
-    bool IsOverlappingButton(entt::registry *registry, entt::entity entity, Button& button, sf::View defaultView);
+    bool IsOverlappingButton(entt::registry *registry, entt::entity entity, ButtonObject& button, sf::View defaultView);
     void DetectButtonClick(entt::registry *registry, sf::View defaultView);
     void GenerateButtons(entt::registry *registry);
 

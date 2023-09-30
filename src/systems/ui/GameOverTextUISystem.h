@@ -15,14 +15,10 @@
 #include "../../application/SFMLWindow.h"
 #include "../../datatype/Vector2.h"
 
-class GameOverTextUISystem : public IRenderableSystem, public IWindowInjectableSystem, public ILoadableSystem, public IEventSubscriberSystem, public ILocateServicesSystem {
+class GameOverTextUISystem : public IWindowInjectableSystem, public ILoadableSystem, public IEventSubscriberSystem {
     void Load(entt::registry *registry) override;
 
     void Unload() override;
-
-    void Render(entt::registry *registry) override;
-
-    int GetRenderOrder() override;
 
     void SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) override;
 
@@ -32,23 +28,17 @@ class GameOverTextUISystem : public IRenderableSystem, public IWindowInjectableS
 
 private:
     std::shared_ptr<SFMLWindow> sfWindow;
-    sf::RectangleShape blackBg;
-    sf::Text gameOverText;
     sf::View uiView;
-    std::shared_ptr<SFMLFontService> fontService;
 
     bool isGameOver = false;
-    float alphaProgress = 0;
-    float animateDuration = 3.f;
 
     entt::registry* lastRegistry;
+
+    entt::entity blackBg, text;
 
     void OnLocalPlayerDestroyed();
 
     void CreateButton(entt::registry *registry, Vector2 position, const std::string text, std::function<void()> callback);
-
-public:
-    void LocateServices(std::shared_ptr<ServiceLocator> serviceLocator) override;
 };
 
 

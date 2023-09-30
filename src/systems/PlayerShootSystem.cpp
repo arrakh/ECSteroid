@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../components/Rotation.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Sprite.h"
 #include "../components/PhysicsDefinition.h"
 #include "../components/debug/Box2DDebug.h"
@@ -29,7 +29,7 @@ void PlayerShootSystem::Update(entt::registry *registry) {
 
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) return;
 
-    auto shoot = registry->view<ShootAbility, LocalPlayer, Position, Rotation>(entt::exclude<ShootAbilityCooldown>);
+    auto shoot = registry->view<ShootAbility, LocalPlayer, WorldPosition, Rotation>(entt::exclude<ShootAbilityCooldown>);
     for (auto [entity, shootData, pos, rot] : shoot.each()) {
         if (shootData.cooldown > 0.f) registry->emplace<ShootAbilityCooldown>(entity, ShootAbilityCooldown { shootData.cooldown });
 
@@ -62,7 +62,7 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
     Vector2 shootDir {cos(rad) , sin(rad)};
     Vector2 bulletPos =  pos + (shootDir * (data.startDistance));
 
-    registry->emplace<Position>(bullet, Position {bulletPos});
+    registry->emplace<WorldPosition>(bullet, WorldPosition {bulletPos});
     registry->emplace<Rotation>(bullet, Rotation {angle});
 
     registry->emplace<BulletDestroyOnCollision>(bullet);

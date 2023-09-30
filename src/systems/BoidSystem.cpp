@@ -11,7 +11,7 @@
 #include "../components/Sprite.h"
 
 void BoidSystem::Update(entt::registry *registry) {
-    auto view = registry->view<Boid, Position>();
+    auto view = registry->view<Boid, WorldPosition>();
 
     for (auto [entity, boidData, posData] : view.each()) {
         Vector2 flockVelocity = Flock(registry, boidData, posData, 50, .0003);
@@ -25,12 +25,12 @@ void BoidSystem::Update(entt::registry *registry) {
 
     for (auto [entity, boidData, posData] : view.each()) {
         auto newPos = posData.vector + (boidData.velocity * Time::deltaTime() * 200);
-        registry->patch<Position>(entity, [newPos](Position& data){data.vector = newPos;});
+        registry->patch<WorldPosition>(entity, [newPos](WorldPosition& data){ data.vector = newPos;});
         BounceOffWalls(registry, entity, boidData, posData);
     }
 }
 
-void BoidSystem::BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, Position& pos)
+void BoidSystem::BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, WorldPosition& pos)
 {
     float hw = sfWindow->width / 2.f;
     float hh = sfWindow->height / 2.f;
@@ -46,12 +46,12 @@ void BoidSystem::BounceOffWalls(entt::registry * registry, entt::entity entity, 
     registry->patch<Boid>(entity, [vel](Boid& data){data.velocity = vel;});
 }
 
-Vector2 BoidSystem::Flock(entt::registry * registry, Boid& boid, Position& pos, float distance, float power)
+Vector2 BoidSystem::Flock(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power)
 {
     float meanX = 0, meanY = 0;
     float count = 0;
 
-    auto view = registry->view<Boid, Position>();
+    auto view = registry->view<Boid, WorldPosition>();
     for (auto [entity, boidData, posData] : view.each()) {
         if (posData.getDistance(pos) > distance) continue;
         meanX += posData.vector.x;
@@ -69,12 +69,12 @@ Vector2 BoidSystem::Flock(entt::registry * registry, Boid& boid, Position& pos, 
     return Vector2{deltaCenterX * power, deltaCenterY * power};
 }
 
-Vector2 BoidSystem::Align(entt::registry * registry, Boid& boid, Position& pos, float distance, float power)
+Vector2 BoidSystem::Align(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power)
 {
     float meanXvel = 0, meanYvel = 0;
     float count = 0;
 
-    auto view = registry->view<Boid, Position>();
+    auto view = registry->view<Boid, WorldPosition>();
     for (auto [entity, boidData, posData] : view.each()) {
         if (posData.getDistance(pos) > distance) continue;
         meanXvel += boidData.velocity.x;
@@ -92,11 +92,11 @@ Vector2 BoidSystem::Align(entt::registry * registry, Boid& boid, Position& pos, 
     return Vector2{dXvel * power, dYvel * power};
 }
 
-Vector2 BoidSystem::Avoid(entt::registry * registry, Boid& boid, Position& pos, float distance, float power)
+Vector2 BoidSystem::Avoid(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power)
 {
     float sumClosenessX = 0, sumClosenessY = 0;
 
-    auto view = registry->view<Boid, Position>();
+    auto view = registry->view<Boid, WorldPosition>();
     for (auto [entity, boidData, posData] : view.each()) {
         if (posData.getDistance(pos) > distance) continue;
         float closeness = distance - posData.getDistance(pos);
@@ -130,11 +130,11 @@ void BoidSystem::Load(entt::registry *registry) {
         std::uniform_real_distribution<float> randVelX(-1.f ,1.f);
         std::uniform_real_distribution<float> randVelY(-1.f ,1.f);
 
-        registry->emplace<Position>(boid, Position {Vector2(randX(rng), randY(rng))});
+        registry->emplace<WorldPosition>(boid, WorldPosition {Vector2(randX(rng), randY(rng))});
         registry->emplace<Boid>(boid, Boid {Vector2(randVelX(rng), randVelY(rng))});
     }
 
-    registry->sort<Boid, Position>();
+    registry->sort<Boid, WorldPosition>();
 }
 
 void BoidSystem::Unload() {

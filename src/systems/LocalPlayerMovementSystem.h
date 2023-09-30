@@ -7,7 +7,7 @@
 
 #include "core/IUpdatableSystem.h"
 #include "../components/PhysicsBody.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Speed.h"
 #include "../components/Rotation.h"
 #include "core/IEventPublisherSystem.h"

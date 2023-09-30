@@ -3,14 +3,18 @@
 //
 
 #include "MainMenuUISystem.h"
-#include "../../components/Position.h"
+#include "../../components/WorldPosition.h"
 #include "../../components/Sprite.h"
-#include "../../components/Button.h"
+#include "../../components/ButtonObject.h"
 #include "../../components/SFMLViewTarget.h"
 #include "../EntityRelationSystem.h"
 #include "../../components/SFMLText.h"
 #include "../../application/Application.h"
 #include "imgui.h"
+#include "../../components/tween/TweenLocalPosition.h"
+#include "../../components/tween/TweenEase.h"
+#include "../../components/tween/TweenTimer.h"
+#include "../../util/Tweens.h"
 
 
 void MainMenuUISystem::CreateMainMenuButton(entt::registry *registry, Vector2 position, const std::string text, std::function<void()> callback) {
@@ -20,9 +24,9 @@ void MainMenuUISystem::CreateMainMenuButton(entt::registry *registry, Vector2 po
             .useCustomDimensions = true, .customWidth = 300, .customHeight = 80
     });
 
-    registry->emplace<ButtonDefinition>(button, ButtonDefinition {.size = Vector2{300, 80}, .callback = callback});
+    registry->emplace<Button>(button, Button {.size = Vector2{300, 80}, .callback = callback});
 
-    registry->emplace<Position>(button, Position {position });
+    registry->emplace<WorldPosition>(button, WorldPosition {position });
 
     registry->emplace<SFMLViewTarget>(button, SFMLViewTarget{&uiView});
 
@@ -32,11 +36,14 @@ void MainMenuUISystem::CreateMainMenuButton(entt::registry *registry, Vector2 po
             .pressedSpriteName = "btn-pressed"
     });
 
+    Tween::PositionOffset(registry, button, Vector2{0,500}, Vector2{0, 0}, 2.f)
+        .SetEase(Ease::Type::OutCubic);
+
     auto childText = registry->create();
     EntityRelationSystem::Assign(registry, button, childText);
 
     registry->emplace<SFMLText>(childText, SFMLText {text, 52, sf::Color::White, "ethnocentric", 2} );
-    registry->emplace<Position>(childText, Position {Vector2{0,0}});
+    registry->emplace<WorldPosition>(childText, WorldPosition {Vector2{0, 0}});
     registry->emplace<SFMLViewTarget>(childText, SFMLViewTarget{&uiView});
 
 }

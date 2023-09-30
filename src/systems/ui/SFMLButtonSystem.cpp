@@ -6,7 +6,7 @@
 #include "SFMLButtonSystem.h"
 #include "../../components/SFMLViewTarget.h"
 #include "../../components/debug/DebugName.h"
-#include "../../components/Position.h"
+#include "../../components/WorldPosition.h"
 #include "../../datatype/Vector2.h"
 
 void SFMLButtonSystem::Update(entt::registry *registry) {
@@ -18,23 +18,33 @@ void SFMLButtonSystem::Update(entt::registry *registry) {
 
     bool isClicking = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
-    auto buttons = registry->view<Button>();
-    for (auto [entity, button] : buttons.each()) {
+    auto buttons = registry->view<ButtonObject, Button, WorldPosition>();
+    for (auto [entity, buttonObject, button, position] : buttons.each()) {
         if (!button.active) continue;
 
+        auto pos = position.vector;
+        float left = pos.x - (button.size.x * button.pivot.x);
+        float top = pos.y - (button.size.y * button.pivot.y);
 
-        if (!IsOverlappingButton(registry, entity, button, defaultView)) {
-            registry->patch<Button>(entity, [&](Button& btn){btn.state = NORMAL;});
+        registry->patch<ButtonObject>(entity, [&left, &top, &button](ButtonObject& buttonObject){
+            buttonObject.rect.left = left;
+            buttonObject.rect.top = top;
+            buttonObject.rect.width = button.size.x;
+            buttonObject.rect.height = button.size.y;
+        });
+
+        if (!IsOverlappingButton(registry, entity, buttonObject, defaultView)) {
+            registry->patch<ButtonObject>(entity, [&](ButtonObject& btn){ btn.state = NORMAL;});
             continue;
         }
 
         focusedButtonEntity = entity;
         auto newState = isClicking ? PRESSED : HIGHLIGHTED;
-        registry->patch<Button>(entity, [&newState](Button& btn){btn.state = newState;});
+        registry->patch<ButtonObject>(entity, [&newState](ButtonObject& btn){ btn.state = newState;});
     }
 }
 
-bool SFMLButtonSystem::IsOverlappingButton(entt::registry *registry, entt::entity entity, Button& button, sf::View defaultView){
+bool SFMLButtonSystem::IsOverlappingButton(entt::registry *registry, entt::entity entity, ButtonObject& button, sf::View defaultView){
     auto viewTarget = registry->try_get<SFMLViewTarget>(entity);
     auto view = viewTarget != nullptr ? *viewTarget->targetView : defaultView;
     auto mousePos = sf::Mouse::getPosition(*sfWindow->windowPtr);
@@ -46,12 +56,15 @@ bool SFMLButtonSystem::IsOverlappingButton(entt::registry *registry, entt::entit
 void SFMLButtonSystem::DetectButtonClick(entt::registry *registry, sf::View defaultView) {
     if (!registry->valid(focusedButtonEntity)) return;
 
+    auto& buttonObject = registry->get<ButtonObject>(focusedButtonEntity);
     auto& button = registry->get<Button>(focusedButtonEntity);
 
-    if (button.state != PRESSED) return;
+    if (!button.active) return;
+
+    if (buttonObject.state != PRESSED) return;
 
     bool isClicking = sf::Mouse::isButtonPressed(sf::Mouse::Left);
-    bool isOverlapping = IsOverlappingButton(registry, focusedButtonEntity, button, defaultView);
+    bool isOverlapping = IsOverlappingButton(registry, focusedButtonEntity, buttonObject, defaultView);
 
     if (isClicking || !isOverlapping) return;
     button.callback();
@@ -59,17 +72,14 @@ void SFMLButtonSystem::DetectButtonClick(entt::registry *registry, sf::View defa
 }
 
 void SFMLButtonSystem::GenerateButtons(entt::registry *registry) {
-    auto definitions = registry->view<ButtonDefinition>();
-    for (auto [entity, definition] : definitions.each()) {
-        auto posComp = registry->try_get<Position>(entity);
-        Vector2 pos = posComp != nullptr ? posComp->vector : Vector2{0.f , 0.f};
+    auto definitions = registry->view<Button, WorldPosition>(entt::exclude<ButtonObject>);
+    for (auto [entity, definition, position] : definitions.each()) {
+        Vector2 pos = position.vector;
 
         float left = pos.x - (definition.size.x * definition.pivot.x);
         float top = pos.y - (definition.size.y * definition.pivot.y);
         sf::FloatRect rect{left, top, definition.size.x, definition.size.y};
 
-        registry->emplace<Button>(entity, Button {definition.callback, rect});
+        registry->emplace<ButtonObject>(entity, ButtonObject {rect, NORMAL});
     }
-
-    registry->clear<ButtonDefinition>();
 }

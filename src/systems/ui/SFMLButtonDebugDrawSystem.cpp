@@ -3,13 +3,13 @@
 //
 
 #include "SFMLButtonDebugDrawSystem.h"
-#include "../../components/Button.h"
+#include "../../components/ButtonObject.h"
 #include "../../components/SFMLViewTarget.h"
 #include "../../components/debug/SFMLButtonDebug.h"
 #include "../../datatype/Vector2.h"
 
 void SFMLButtonDebugDrawSystem::Render(entt::registry *registry) {
-    auto buttons = registry->view<Button>();
+    auto buttons = registry->view<ButtonObject>();
 
     auto defaultView = sfWindow->windowPtr->getView();
 

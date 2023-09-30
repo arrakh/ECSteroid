@@ -9,7 +9,7 @@
 #include "../components/Health.h"
 #include "../components/WrapAround.h"
 #include "../components/Rotation.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/PhysicsDefinition.h"
 #include "../util/Random.h"
 #include "../application/Application.h"
@@ -38,7 +38,7 @@ void AsteroidSpawnerSystem::OnAsteroidDestroyed(entt::registry &registry, entt::
 
     if (asteroidData == nullptr) return;
 
-    auto position = registry.try_get<Position>(entity);
+    auto position = registry.try_get<WorldPosition>(entity);
 
     if (position == nullptr) return;
 
@@ -81,7 +81,7 @@ void AsteroidSpawnerSystem::CreateAsteroid(entt::registry *registry, const Creat
     registry->emplace<Asteroid>(asteroid, param.definition);
 
     registry->emplace<WrapAround>(asteroid, WrapAround {});
-    registry->emplace<Position>(asteroid, Position {param.position});
+    registry->emplace<WorldPosition>(asteroid, WorldPosition {param.position});
     registry->emplace<Rotation>(asteroid, Rotation {param.definition.startRotation});
 
     b2BodyDef bodyDef;

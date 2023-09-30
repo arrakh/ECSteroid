@@ -4,11 +4,12 @@
 
 #include <iostream>
 #include "SFMLRenderSystem.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Rotation.h"
 #include "../components/SFMLTransformable.h"
 #include "../components/SFMLDrawable.h"
 #include "../components/SFMLViewTarget.h"
+#include "../components/debug/DebugName.h"
 
 void SFMLRenderSystem::Render(entt::registry* registry) {
     ApplyTransforms(registry);
@@ -24,7 +25,7 @@ void SFMLRenderSystem::ApplyTransforms(entt::registry *registry) {
 
     for (auto [entity, t] : view.each()) {
 
-        auto posData = registry->try_get<Position>(entity);
+        auto posData = registry->try_get<WorldPosition>(entity);
         if (posData != nullptr) t.transformable->setPosition(posData->vector.x, posData->vector.y);
 
         auto rotData = registry->try_get<Rotation>(entity);

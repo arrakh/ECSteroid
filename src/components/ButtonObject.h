@@ -2,8 +2,8 @@
 // Created by Arya Rakha on 9/23/2023.
 //
 
-#ifndef ECSTEROID_BUTTON_H
-#define ECSTEROID_BUTTON_H
+#ifndef ECSTEROID_BUTTONOBJECT_H
+#define ECSTEROID_BUTTONOBJECT_H
 
 
 #include <functional>
@@ -13,18 +13,16 @@
 
 enum ButtonState { NORMAL, HIGHLIGHTED, PRESSED };
 
-struct ButtonDefinition {
+struct Button {
     Vector2 size;
     Vector2 pivot = {0.5f, 0.5f};
-
     std::function<void()> callback;
+    bool active = true;
 };
 
-struct Button {
-    std::function<void()> callback;
-    const sf::FloatRect rect;
-    bool active = true;
-    ButtonState state;
+struct ButtonObject {
+    sf::FloatRect rect;
+    ButtonState state = NORMAL;
 };
 
 struct ButtonStateSpritesDefinition {
@@ -41,4 +39,4 @@ struct ButtonStateSprites{
 
 
 
-#endif //ECSTEROID_BUTTON_H
+#endif //ECSTEROID_BUTTONOBJECT_H

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "SFMLButtonStatesSpriteSystem.h"
-#include "../../components/Button.h"
+#include "../../components/ButtonObject.h"
 #include "../../components/SFMLSprite.h"
 
 void SFMLButtonStatesSpriteSystem::LateUpdate(entt::registry *registry) {
@@ -18,8 +18,8 @@ void SFMLButtonStatesSpriteSystem::LateUpdate(entt::registry *registry) {
 
     registry->clear<ButtonStateSpritesDefinition>();
 
-    auto buttons = registry->view<Button, ButtonStateSprites, SFMLSprite>();
-    for (auto [entity, button, sprites, spriteRef] : buttons.each()) {
+    auto buttons = registry->view<Button, ButtonObject, ButtonStateSprites, SFMLSprite>();
+    for (auto [entity, button, buttonObject, sprites, spriteRef] : buttons.each()) {
         auto color = button.active ? sf::Color::White : sf::Color{255, 255, 255, 77};
         spriteRef.sprite->setColor(color);
         if (!button.active){
@@ -27,7 +27,7 @@ void SFMLButtonStatesSpriteSystem::LateUpdate(entt::registry *registry) {
             continue;
         }
 
-        switch (button.state) {
+        switch (buttonObject.state) {
             case HIGHLIGHTED: spriteRef.sprite->setTexture(*sprites.highlightedTexture); break;
             case PRESSED: spriteRef.sprite->setTexture(*sprites.pressedTexture); break;
             default: spriteRef.sprite->setTexture(*sprites.normalTexture); break;

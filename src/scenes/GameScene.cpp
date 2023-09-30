@@ -41,8 +41,12 @@
 #include "../systems/ui/SFMLButtonStatesSpriteSystem.h"
 #include "../systems/ui/SFMLButtonDebugDrawSystem.h"
 #include "../systems/ui/SFMLTextSystem.h"
+#include "../systems/tween/TweenSystems.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
+
+    Tween::RegisterSystems(handle);
+
     handle->Register(new EntityRelationSystem());
     handle->Register(new SFMLButtonSystem());
     handle->Register(new SFMLButtonStatesSpriteSystem());
@@ -123,7 +127,7 @@ void GameScene::CreatePlayer() {
 
     registry.emplace<WrapAround>(player, WrapAround {});
     registry.emplace<LocalPlayer>(player, LocalPlayer{});
-    registry.emplace<Position>(player, Position {Vector2(0.0f, 0.0f)});
+    registry.emplace<WorldPosition>(player, WorldPosition {Vector2(0.0f, 0.0f)});
     registry.emplace<Rotation>(player, Rotation {0.0f});
 
     registry.emplace<MoveSpeed>(player, MoveSpeed {10.0f});
@@ -156,7 +160,7 @@ void GameScene::CreatePlayer() {
 void GameScene::CreateBackground() {
     auto bg = registry.create();
 
-    registry.emplace<Position>(bg, Position {Vector2(0, 0)});
+    registry.emplace<WorldPosition>(bg, WorldPosition {Vector2(0, 0)});
     registry.emplace<SpriteDefinition>(bg, SpriteDefinition {
             .spriteName =  "darkPurple", .initialOrder =  -10000,
             .useCustomDimensions = true, .customWidth = sfWindow->width, .customHeight = sfWindow->height,

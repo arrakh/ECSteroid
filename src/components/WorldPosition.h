@@ -8,11 +8,11 @@
 
 #include "../datatype/Vector2.h"
 
-struct Position {
+struct WorldPosition {
 public:
     Vector2 vector;
 
-    [[nodiscard]] float getDistance(const Position& other) const {
+    [[nodiscard]] float getDistance(const WorldPosition& other) const {
         float deltaX = vector.x - other.vector.x;
         float deltaY = vector.y - other.vector.y;
         return std::sqrt(deltaX * deltaX + deltaY * deltaY);

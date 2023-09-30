@@ -8,7 +8,7 @@
 
 #include "core/IUpdatableSystem.h"
 #include "../components/Boid.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "core/ILoadableSystem.h"
 #include "core/IWindowInjectableSystem.h"
 #include "../application/SFMLWindow.h"
@@ -28,10 +28,10 @@ public:
 
 private:
     std::shared_ptr<SFMLWindow> sfWindow;
-    void BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, Position& pos);
-    Vector2 Flock(entt::registry * registry, Boid& boid, Position& pos, float distance, float power);
-    Vector2 Align(entt::registry * registry, Boid& boid, Position& pos, float distance, float power);
-    Vector2 Avoid(entt::registry * registry, Boid& boid, Position& pos, float distance, float power);
+    void BounceOffWalls(entt::registry * registry, entt::entity entity, Boid& boid, WorldPosition& pos);
+    Vector2 Flock(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power);
+    Vector2 Align(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power);
+    Vector2 Avoid(entt::registry * registry, Boid& boid, WorldPosition& pos, float distance, float power);
 };
 
 

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "AsteroidToPlayerCollisionSystem.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Health.h"
 #include "../components/Asteroid.h"
 #include "../components/LocalPlayer.h"

@@ -8,14 +8,14 @@
 
 #include "core/IRenderableSystem.h"
 #include "../components/LocalPlayer.h"
-#include "../components/Position.h"
+#include "../components/WorldPosition.h"
 #include "../components/Rotation.h"
 #include "../components/debug/DebugAngle.h"
 
 class DebugAngleSystem : public IRenderableSystem {
 public:
     void Render(entt::registry *registry, sf::RenderTarget *renderTarget) override {
-        auto view = registry->view<LocalPlayer, Position, Rotation>();
+        auto view = registry->view<LocalPlayer, WorldPosition, Rotation>();
         for (auto [entity, pos, rot] : view.each()) {
             auto debug = registry->try_get<DebugAngle>(entity);
             if (debug == nullptr){

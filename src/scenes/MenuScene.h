@@ -11,7 +11,6 @@
 class MenuScene : public Scene {
     void RegisterSystems(SystemsHandler *handle) override;
 
-
 };
 
 
