@@ -6,7 +6,8 @@ an Asteroid game using ECS, developed using C++, EnTT, Box2D, and SFML libraries
 To Be Added
 
 ### Engine
-- Simple event system
+- Simple Event System
+- ECS-based Tween System
 
 Libraries used:
 - SFML for Rendering
@@ -32,7 +33,7 @@ Libraries used:
 - ~~Scene Management~~
 - ~~IWindow~~
 - Main Menu
-  - Button Entity
+  - ~~Button Entity~~
   - UI Design
 
 # Improvement Notes
