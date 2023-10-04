@@ -7,6 +7,7 @@
 
 
 #include "Scene.h"
+#include "../application/SFMLWindow.h"
 
 class TweenTestingScene : public Scene {
     void RegisterSystems(SystemsHandler *handle) override;
@@ -15,6 +16,9 @@ protected:
     void OnStart() override;
 
     void OnUpdate() override;
+
+    std::shared_ptr<SFMLWindow> sfWindow;
+
 };
 
 

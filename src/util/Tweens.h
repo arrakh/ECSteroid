@@ -7,10 +7,8 @@
 
 #include "../datatype/TweenBuilder.h"
 #include "../datatype/Vector2.h"
-#include "../components/tween/TweenTarget.h"
 #include "../components/Relation.h"
 #include "../components/WorldPosition.h"
-#include "../components/tween/TweenTimer.h"
 #include "../components/tween/TweenLocalPosition.h"
 #include "../components/tween/TweenWorldPosition.h"
 

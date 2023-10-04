@@ -49,7 +49,7 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
 
         auto spritePtr = std::make_shared<sf::Sprite>(sprite);
 
-        registry->emplace<SFMLSprite>(entity, SFMLSprite { spritePtr });
+        registry->emplace<SFMLSprite>(entity, SFMLSprite { spritePtr, Vector2{sprite.getScale()}});
         registry->emplace<SFMLTransformable>(entity, SFMLTransformable { spritePtr });
         registry->emplace<SFMLDrawable>(entity, SFMLDrawable { def.initialOrder, spritePtr });
     }

@@ -7,9 +7,11 @@
 
 #include <memory>
 #include "SFML/Graphics.hpp"
+#include "../datatype/Vector2.h"
 
 struct SFMLSprite{
     std::shared_ptr<sf::Sprite> sprite;
+    Vector2 spriteScale;
 };
 
 #endif //ECSTEROID_SFMLSPRITE_H

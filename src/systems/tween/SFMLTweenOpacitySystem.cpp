@@ -5,34 +5,30 @@
 #include "SFMLTweenOpacitySystem.h"
 #include "../../components/SFMLSprite.h"
 #include "../../components/tween/TweenOpacity.h"
-#include "../../components/tween/TweenEase.h"
-#include "../../components/tween/TweenTimer.h"
 #include "../../components/SFMLText.h"
-#include "../../components/tween/TweenTarget.h"
+#include "../../components/tween/TweenData.h"
 
 void SFMLTweenOpacitySystem::Update(entt::registry *registry) {
-    auto sprites = registry->view<TweenTarget, TweenOpacity, TweenTimer>();
+    auto sprites = registry->view<TweenData, TweenOpacity>();
 
-    for (auto [entity, target, tween, timer] : sprites.each()) {
-        auto sprite = registry->try_get<SFMLSprite>(target.entity);
+    for (auto [entity, data, tween] : sprites.each()) {
+        auto sprite = registry->try_get<SFMLSprite>(data.target);
         if (sprite == nullptr) continue;
 
-        auto ease = TweenEase::GetType(registry, entity);
-        auto alpha = Ease::Calculate(ease, tween.normalizedFrom, tween.normalizedTo, timer.GetProgress());
+        auto alpha = Ease::Calculate(data.ease, tween.normalizedFrom, tween.normalizedTo, data.GetProgress());
         auto color = sprite->sprite->getColor();
         color.a = 255 * alpha;
 
         sprite->sprite->setColor(color);
     }
 
-    auto texts = registry->view<TweenTarget, TweenOpacity, TweenTimer>();
+    auto texts = registry->view<TweenData, TweenOpacity>();
 
-    for (auto [entity, target, tween, timer] : texts.each()) {
-        auto text = registry->try_get<SFMLTextObject>(target.entity);
+    for (auto [entity, data, tween] : texts.each()) {
+        auto text = registry->try_get<SFMLTextObject>(data.target);
         if (text == nullptr) continue;
 
-        auto ease = TweenEase::GetType(registry, entity);
-        auto alpha = Ease::Calculate(ease, tween.normalizedFrom, tween.normalizedTo, timer.GetProgress());
+        auto alpha = Ease::Calculate(data.ease, tween.normalizedFrom, tween.normalizedTo, data.GetProgress());
         auto fillColor = text->sfText->getFillColor();
         auto outlineColor = text->sfText->getOutlineColor();
         fillColor.a = 255 * alpha;

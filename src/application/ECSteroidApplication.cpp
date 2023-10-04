@@ -7,10 +7,10 @@
 #include "../services/SFMLFontService.h"
 #include "../services/SFMLAudioService.h"
 #include "SFMLImGuiWindow.h"
-#include "../scenes/MenuScene.h"
+#include "../scenes/TweenTestingScene.h"
 
 std::unique_ptr<Scene> ECSteroidApplication::GetInitialScene() {
-    return std::make_unique<MenuScene>();
+    return std::make_unique<TweenTestingScene>();
 }
 
 void ECSteroidApplication::RegisterServices() {

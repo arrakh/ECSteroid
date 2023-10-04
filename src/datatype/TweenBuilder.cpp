@@ -3,7 +3,7 @@
 //
 
 #include "TweenBuilder.h"
-#include "../components/tween/TweenEase.h"
+#include "../components/tween/TweenData.h"
 
 TweenBuilder::TweenBuilder(entt::registry *registry, entt::entity tweenEntity) : registry(registry), tweenEntity(tweenEntity) {}
 
@@ -17,6 +17,6 @@ TweenBuilder *TweenBuilder::SetOnUpdate(std::function<void(float)> onComplete) {
 }
 
 TweenBuilder *TweenBuilder::SetEase(Ease::Type type) {
-    registry->emplace<TweenEase>(tweenEntity, TweenEase{type});
+    registry->patch<TweenData>(tweenEntity, [type](TweenData& data){ data.ease = type; });
     return this;
 }

@@ -32,11 +32,9 @@ private:
 
     bool isGameOver = false;
 
-    entt::registry* lastRegistry;
-
     entt::entity blackBg, text;
 
-    void OnLocalPlayerDestroyed();
+    void OnLocalPlayerDestroyed(entt::registry &registry, entt::entity entity);
 
     void CreateButton(entt::registry *registry, Vector2 position, const std::string text, std::function<void()> callback);
 };

@@ -3,18 +3,18 @@
 //
 
 #include "TweenTimerSystem.h"
-#include "../../components/tween/TweenTimer.h"
 #include "../../util/Time.h"
+#include "../../components/tween/TweenData.h"
 
 void TweenTimerSystem::Update(entt::registry *registry) {
-    auto timers = registry->view<TweenTimer>();
+    auto timers = registry->view<TweenData>();
     for (auto [entity, timer] : timers.each()) {
         timer.currentTime += Time::deltaTime();
     }
 }
 
 void TweenTimerSystem::FinalUpdate(entt::registry *registry) {
-    auto timers = registry->view<TweenTimer>();
+    auto timers = registry->view<TweenData>();
     for (auto [entity, timer] : timers.each()) {
         if (timer.currentTime < timer.totalTime) continue;
         registry->destroy(entity);

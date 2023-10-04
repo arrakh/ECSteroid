@@ -60,7 +60,6 @@ void GameOverTextUISystem::CreateButton(entt::registry *registry, Vector2 positi
 }
 
 void GameOverTextUISystem::SubscribeEvents(entt::registry *registry, Events::Subscriber *subscriber) {
-    lastRegistry = registry;
     registry->on_destroy<LocalPlayer>().connect<&GameOverTextUISystem::OnLocalPlayerDestroyed>(this);
 }
 
@@ -68,25 +67,25 @@ void GameOverTextUISystem::UnsubscribeEvents(entt::registry *registry, Events::S
     registry->on_destroy<LocalPlayer>().disconnect<&GameOverTextUISystem::OnLocalPlayerDestroyed>(this);
 }
 
-void GameOverTextUISystem::OnLocalPlayerDestroyed() {
+void GameOverTextUISystem::OnLocalPlayerDestroyed(entt::registry &registry, entt::entity entity) {
     std::cout << "GAME OVER!!!\n";
     isGameOver = true;
 
-    CreateButton(lastRegistry, Vector2(0, 120), "Retry", [](){ Application::ChangeScene<GameScene>(); });
-    CreateButton(lastRegistry, Vector2(0, 220), "Quit", [](){ Application::ChangeScene<MenuScene>(); });
+    CreateButton(&registry, Vector2(0, 120), "Retry", [](){ Application::ChangeScene<GameScene>(); });
+    CreateButton(&registry, Vector2(0, 220), "Quit", [](){ Application::ChangeScene<MenuScene>(); });
 
-    blackBg = lastRegistry->create();
+    blackBg = registry.create();
     Vector2 bgSize {99999, 99999};
     auto bg = std::make_shared<sf::RectangleShape>();
     bg->setSize(bgSize);
     bg->setFillColor(sf::Color{0, 0, 0, 0});
     bg->setPosition(0, 0);
     bg->setOrigin(bgSize / 2.f);
-    lastRegistry->emplace<SFMLDrawable>(blackBg, SFMLDrawable {2, bg});
-    lastRegistry->emplace<SFMLViewTarget>(blackBg, SFMLViewTarget{&uiView});
+    registry.emplace<SFMLDrawable>(blackBg, SFMLDrawable {2, bg});
+    registry.emplace<SFMLViewTarget>(blackBg, SFMLViewTarget{&uiView});
 
-    text = lastRegistry->create();
-    lastRegistry->emplace<SFMLText>(text, SFMLText {"Game Over", 72, sf::Color::Transparent, "ethnocentric", 3});
-    lastRegistry->emplace<WorldPosition>(text, WorldPosition{Vector2{0, -100}});
-    lastRegistry->emplace<SFMLViewTarget>(text, SFMLViewTarget{&uiView});
+    text = registry.create();
+    registry.emplace<SFMLText>(text, SFMLText {"Game Over", 72, sf::Color::Transparent, "ethnocentric", 3});
+    registry.emplace<WorldPosition>(text, WorldPosition{Vector2{0, -100}});
+    registry.emplace<SFMLViewTarget>(text, SFMLViewTarget{&uiView});
 }

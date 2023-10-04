@@ -12,8 +12,6 @@
 #include "../../application/Application.h"
 #include "imgui.h"
 #include "../../components/tween/TweenLocalPosition.h"
-#include "../../components/tween/TweenEase.h"
-#include "../../components/tween/TweenTimer.h"
 #include "../../util/Tweens.h"
 
 

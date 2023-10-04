@@ -5,12 +5,11 @@
 #include "Tweens.h"
 #include "../components/tween/TweenOpacity.h"
 #include "../components/tween/TweenScale.h"
+#include "../components/tween/TweenData.h"
 
 TweenBuilder Tween::PositionOffset(entt::registry *registry, entt::entity target, Vector2 from, Vector2 to, float duration){
     auto entity = registry->create();
-
-    registry->emplace<TweenTarget>(entity, TweenTarget{target});
-    registry->emplace<TweenTimer>(entity, TweenTimer{duration});
+    registry->emplace<TweenData>(entity, TweenData{target, duration});
 
     auto targetRelation = registry->try_get<Relation>(target);
     bool shouldModifyLocal = targetRelation != nullptr && registry->valid(targetRelation->parent);
@@ -28,9 +27,8 @@ TweenBuilder Tween::PositionOffset(entt::registry *registry, entt::entity target
 
 TweenBuilder Tween::Opacity(entt::registry *registry, entt::entity target, float from, float to, float duration) {
     auto entity = registry->create();
+    registry->emplace<TweenData>(entity, TweenData{target, duration});
 
-    registry->emplace<TweenTarget>(entity, TweenTarget{target});
-    registry->emplace<TweenTimer>(entity, TweenTimer{duration});
     registry->emplace<TweenOpacity>(entity, TweenOpacity{from, to});
 
     return TweenBuilder {registry, entity};
@@ -38,9 +36,8 @@ TweenBuilder Tween::Opacity(entt::registry *registry, entt::entity target, float
 
 TweenBuilder Tween::Scale(entt::registry *registry, entt::entity target, Vector2 from, Vector2 to, float duration){
     auto entity = registry->create();
+    registry->emplace<TweenData>(entity, TweenData{target, duration});
 
-    registry->emplace<TweenTarget>(entity, TweenTarget{target});
-    registry->emplace<TweenTimer>(entity, TweenTimer{duration});
     registry->emplace<TweenScale>(entity, TweenScale{from, to});
 
     return TweenBuilder {registry, entity};
@@ -61,8 +58,7 @@ Vector2 Tween::GetAccumulatedWorldPosition(entt::registry *registry, entt::entit
 TweenBuilder Tween::PositionExact(entt::registry *registry, entt::entity target, Vector2 from, Vector2 to, float duration){
     auto entity = registry->create();
 
-    registry->emplace<TweenTarget>(entity, TweenTarget{target});
-    registry->emplace<TweenTimer>(entity, TweenTimer{duration});
+    registry->emplace<TweenData>(entity, TweenData{target, duration});
 
     auto targetRelation = registry->try_get<Relation>(target);
     bool hasParent = targetRelation != nullptr && registry->valid(targetRelation->parent);

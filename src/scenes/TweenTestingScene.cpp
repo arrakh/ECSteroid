@@ -31,7 +31,7 @@ void TweenTestingScene::RegisterSystems(SystemsHandler *handle) {
 }
 
 void TweenTestingScene::OnStart() {
-    auto sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);
+    sfWindow = std::dynamic_pointer_cast<SFMLWindow>(window);
 
     auto bg = registry.create();
 
@@ -48,6 +48,7 @@ void TweenTestingScene::OnStart() {
         registry.emplace<TweenTest>(testEntity);
         registry.emplace<SpriteDefinition>(testEntity, SpriteDefinition {
                 .spriteName =  "meteorBrown_med3", .initialOrder =  i,
+                .useCustomDimensions = true, .customWidth = 10, .customHeight = 10,
         });
         registry.emplace<Rotation>(testEntity, Rotation{Random::Range(0.f, 360.f)});
 
@@ -94,6 +95,29 @@ void TweenTestingScene::OnUpdate() {
     }
 
     ImGui::Spacing();
+
+    if (ImGui::Button("Spawn 1000")){
+        ImGui::End();
+
+        for (int i = 0; i < 1000; ++i) {
+            auto testEntity = registry.create();
+
+            registry.emplace<TweenTest>(testEntity);
+            registry.emplace<SpriteDefinition>(testEntity, SpriteDefinition {
+                    .spriteName =  "meteorBrown_med3", .initialOrder =  i,
+                    .useCustomDimensions = true, .customWidth = 10, .customHeight = 10,
+            });
+            registry.emplace<Rotation>(testEntity, Rotation{Random::Range(0.f, 360.f)});
+
+            float hw = sfWindow->width / 2.f;
+            float hh = sfWindow->height / 2.f;
+            float randX = Random::Range(-hw, hw);
+            float randY = Random::Range(-hh, hh);
+            registry.emplace<WorldPosition>(testEntity, WorldPosition {Vector2(randX, randY)});
+        }
+
+        return;
+    }
 
     if (ImGui::Combo("Type", &currentTypeIdx, TypeNames, IM_ARRAYSIZE(TypeNames))) {
         currentType = static_cast<Ease::Type>(currentTypeIdx);
