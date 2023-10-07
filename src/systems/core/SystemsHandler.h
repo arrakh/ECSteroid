@@ -18,6 +18,7 @@
 #include "ILocateServicesSystem.h"
 #include "../../application/IWindow.h"
 #include "IWindowInjectableSystem.h"
+#include "IEarlyUpdatableSystem.h"
 
 class SystemsHandler {
 private:
@@ -26,6 +27,7 @@ private:
     std::vector<IUpdatableSystem*> updatables;
     std::vector<IFixedUpdatableSystem*> fixedUpdatables;
     std::vector<IFinalUpdatableSystem*> finalUpdatables;
+    std::vector<IEarlyUpdatableSystem*> earlyUpdatables;
     std::vector<ILateUpdatableSystem*> lateUpdatables;
     std::vector<IEventSubscriberSystem*> eventRegistrables;
     std::vector<IEventPublisherSystem*> eventPublishers;
@@ -41,6 +43,7 @@ public:
         if constexpr (std::is_base_of_v<IEventPublisherSystem, T>) eventPublishers.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IFixedUpdatableSystem, T>) fixedUpdatables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IFinalUpdatableSystem, T>) finalUpdatables.push_back(std::move(system));
+        if constexpr (std::is_base_of_v<IEarlyUpdatableSystem, T>) earlyUpdatables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<ILateUpdatableSystem, T>) lateUpdatables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IRenderableSystem, T>) renderables.push_back(std::move(system));
         if constexpr (std::is_base_of_v<IUpdatableSystem, T>) updatables.push_back(std::move(system));
@@ -50,6 +53,7 @@ public:
     void UpdateSystems(entt::registry* registry);
     void FixedUpdateSystems(entt::registry* registry);
     void FinalUpdateSystems(entt::registry* registry);
+    void EarlyUpdateSystems(entt::registry* registry);
     void LateUpdateSystems(entt::registry* registry);
     void RenderSystems(entt::registry* registry);
     void RegisterEvents(entt::registry* registry, Events::Subscriber* listener);

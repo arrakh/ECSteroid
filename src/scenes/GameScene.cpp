@@ -42,10 +42,12 @@
 #include "../systems/ui/SFMLButtonDebugDrawSystem.h"
 #include "../systems/ui/SFMLTextSystem.h"
 #include "../systems/tween/TweenSystems.h"
+#include "../systems/tween/SFMLTweenSystems.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
 
     Tween::RegisterSystems(handle);
+    Tween::RegisterSFMLSystems(handle);
 
     handle->Register(new EntityRelationSystem());
     handle->Register(new SFMLButtonSystem());
@@ -119,7 +121,7 @@ void GameScene::CreatePlayer() {
     Vector2 size{16.f, 30.f};
 
     registry.emplace<SpriteDefinition>(player, SpriteDefinition {
-        .spriteName =  "playerShip1_blue", .initialOrder =  1,
+        .spriteName =  "playerShip", .initialOrder =  1,
         .useCustomDimensions = true, .customWidth = size.x, .customHeight = size.y
     });
 
@@ -136,8 +138,8 @@ void GameScene::CreatePlayer() {
     registry.emplace<Health>(player, Health{200.f});
 
     registry.emplace<ShootAbility>(player, ShootAbility {
-        .startDistance = size.x / 2.f + 10.f,  .cooldown = 0.2f,
-        .bulletSpeed = 800.f, .bulletLifetime = 1.2f, .bulletDamage = 15.f
+        .startDistance = size.x / 2.f + 50.f,  .cooldown = 0.2f,
+        .bulletSpeed = 1200.f, .bulletLifetime = 1.2f, .bulletDamage = 15.f
     });
 
     b2BodyDef bodyDef;

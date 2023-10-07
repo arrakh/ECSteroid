@@ -47,7 +47,7 @@ void TweenTestingScene::OnStart() {
 
         registry.emplace<TweenTest>(testEntity);
         registry.emplace<SpriteDefinition>(testEntity, SpriteDefinition {
-                .spriteName =  "meteorBrown_med3", .initialOrder =  i,
+                .spriteName =  "asteroid-medium-2", .initialOrder =  i,
                 .useCustomDimensions = true, .customWidth = 10, .customHeight = 10,
         });
         registry.emplace<Rotation>(testEntity, Rotation{Random::Range(0.f, 360.f)});
@@ -104,7 +104,7 @@ void TweenTestingScene::OnUpdate() {
 
             registry.emplace<TweenTest>(testEntity);
             registry.emplace<SpriteDefinition>(testEntity, SpriteDefinition {
-                    .spriteName =  "meteorBrown_med3", .initialOrder =  i,
+                    .spriteName =  "asteroid-medium-2", .initialOrder =  i,
                     .useCustomDimensions = true, .customWidth = 10, .customHeight = 10,
             });
             registry.emplace<Rotation>(testEntity, Rotation{Random::Range(0.f, 360.f)});

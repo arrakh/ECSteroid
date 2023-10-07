@@ -71,7 +71,7 @@ void AsteroidSpawnerSystem::CreateAsteroid(entt::registry *registry, const Creat
     auto asteroid = registry->create();
 
     registry->emplace<SpriteDefinition>(asteroid, SpriteDefinition {
-            .spriteName =  "meteorBrown_big4", .initialOrder =  0,
+            .spriteName =  "asteroid-medium-2", .initialOrder =  0,
             .useCustomDimensions = true, .customWidth = param.definition.size, .customHeight = param.definition.size
     });
 

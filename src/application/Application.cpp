@@ -58,6 +58,8 @@ void Application::GameLoop() {
         fixedTickAccumulator -= fixedTickRate;
     }
 
+    currentScene->EarlyUpdate();
+
     currentScene->Update();
 
     currentScene->LateUpdate();

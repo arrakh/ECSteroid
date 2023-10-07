@@ -2,6 +2,7 @@
 // Created by Arya Rakha on 9/30/2023.
 //
 
+#include <iostream>
 #include "Tweens.h"
 #include "../components/tween/TweenOpacity.h"
 #include "../components/tween/TweenScale.h"
@@ -75,4 +76,12 @@ TweenBuilder Tween::PositionExact(entt::registry *registry, entt::entity target,
     }
 
     return TweenBuilder {registry, entity};
+}
+
+void Tween::ResetTime(entt::registry *registry, entt::entity tween){
+    if (!registry->valid(tween)) return;
+
+    auto data = registry->try_get<TweenData>(tween);
+    if (data == nullptr) return;
+    registry->patch<TweenData>(tween, [](TweenData &data){data.currentTime = 0;});
 }

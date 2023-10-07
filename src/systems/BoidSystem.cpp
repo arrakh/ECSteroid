@@ -114,7 +114,7 @@ void BoidSystem::Load(entt::registry *registry) {
         Vector2 size{12.f, 12.f};
 
         registry->emplace<SpriteDefinition>(boid, SpriteDefinition {
-                .spriteName =  "meteorGrey_big4", .initialOrder =  1,
+                .spriteName =  "asteroid-medium-2", .initialOrder =  1,
                 .useCustomDimensions = true, .customWidth = size.y, .customHeight = size.x
         });
 

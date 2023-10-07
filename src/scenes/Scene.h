@@ -18,6 +18,7 @@ public:
     void Update();
     void FixedUpdate();
     void FinalUpdate();
+    void EarlyUpdate();
     void LateUpdate();
     void Render();
 

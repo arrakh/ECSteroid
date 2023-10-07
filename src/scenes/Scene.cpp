@@ -46,6 +46,10 @@ void Scene::FinalUpdate() {
     systemHandler.FinalUpdateSystems(&registry);
 }
 
+void Scene::EarlyUpdate() {
+    systemHandler.EarlyUpdateSystems(&registry);
+}
+
 void Scene::LateUpdate() {
     systemHandler.LateUpdateSystems(&registry);
 }

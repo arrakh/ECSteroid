@@ -17,6 +17,8 @@ public:
     TweenBuilder* SetOnUpdate(std::function<void(float)> onComplete);
     TweenBuilder* SetEase(Ease::Type type);
 
+    entt::entity GetEntity() { return tweenEntity; }
+
 private:
     entt::registry *registry;
     entt::entity tweenEntity;

@@ -64,6 +64,12 @@ void SystemsHandler::FinalUpdateSystems(entt::registry *registry) {
     }
 }
 
+void SystemsHandler::EarlyUpdateSystems(entt::registry *registry) {
+    for (const auto& system : earlyUpdatables) {
+        system->EarlyUpdate(registry);
+    }
+}
+
 void SystemsHandler::LateUpdateSystems(entt::registry *registry) {
     for (const auto& system : lateUpdatables) {
         system->LateUpdate(registry);

@@ -21,6 +21,7 @@ public:
 
 private:
     void CreateBullet(entt::entity shooter, entt::registry *registry, Vector2 pos, float angle, ShootAbility data);
+    void CreateMuzzleFlash(entt::entity shooter, entt::registry *registry, Vector2 pos, float angle, ShootAbility data);
 };
 
 

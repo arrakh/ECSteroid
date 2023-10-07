@@ -19,6 +19,7 @@ namespace Tween{
     TweenBuilder Opacity(entt::registry *registry, entt::entity target, float from, float to, float duration);
     TweenBuilder Scale(entt::registry *registry, entt::entity target, Vector2 from, Vector2 to, float duration);
     Vector2 GetAccumulatedWorldPosition(entt::registry *registry, entt::entity entity);
+    void ResetTime(entt::registry *registry, entt::entity tween);
 }
 
 

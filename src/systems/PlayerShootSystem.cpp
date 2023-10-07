@@ -18,8 +18,24 @@
 #include "../components/PhysicsBody.h"
 #include "../datatype/CollisionGroup.h"
 #include "../components/bullet/BulletOwner.h"
+#include "../components/LocalPosition.h"
+#include "EntityRelationSystem.h"
+#include "../components/LocalRotation.h"
+#include "imgui.h"
+#include "../components/MuzzleFlash.h"
+#include "../util/Tweens.h"
+#include "../components/debug/DebugName.h"
 
 void PlayerShootSystem::Update(entt::registry *registry) {
+
+    auto muzzles = registry->view<MuzzleFlash>();
+    for (auto [entity, muzzle] : muzzles.each()) {
+        muzzle.timer -= Time::deltaTime();
+        if (muzzle.timer > 0) continue;
+        registry->remove<MuzzleFlash>(entity);
+        std::cout << "WILL DESTROY " << DebugName::Get(registry, muzzle.muzzleEntity) << "\n";
+        registry->destroy(muzzle.muzzleEntity);
+    }
 
     auto cooldown = registry->view<ShootAbilityCooldown>();
     for (auto [entity, cooldownData] : cooldown.each()) {
@@ -34,6 +50,7 @@ void PlayerShootSystem::Update(entt::registry *registry) {
         if (shootData.cooldown > 0.f) registry->emplace<ShootAbilityCooldown>(entity, ShootAbilityCooldown { shootData.cooldown });
 
         CreateBullet(entity, registry, pos.vector, rot.value, shootData);
+        //CreateMuzzleFlash(entity, registry, pos.vector, rot.value, shootData);
     }
 }
 
@@ -47,16 +64,12 @@ void PlayerShootSystem::Unload() {
 
 void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *registry, const Vector2 pos, const float angle, ShootAbility data) {
     auto bullet = registry->create();
-    float size = 8.f;
+    float size = 10.f;
     float halfSize = size / 2.f;
 
     registry->emplace<BulletOwner>(bullet, BulletOwner { shooter });
-
+    registry->emplace<DebugName>(bullet, DebugName{ "Bullet #" + std::to_string(static_cast<std::uint32_t>(bullet))});
     registry->emplace<Box2DDebugDefinition>(bullet, Box2DDebugDefinition { sf::Color::Green, 1.f});
-    registry->emplace<SpriteDefinition>(bullet, SpriteDefinition {
-            .spriteName =  "meteorGrey_tiny1", .initialOrder =  0,
-            .useCustomDimensions = true, .customWidth = size, .customHeight = size
-    });
 
     float rad = angle * M_PI / 180;
     Vector2 shootDir {cos(rad) , sin(rad)};
@@ -98,4 +111,56 @@ void PlayerShootSystem::CreateBullet(entt::entity shooter, entt::registry *regis
     bodyDef.linearVelocity = shootDir * (data.bulletSpeed + velIncrease);
 
     registry->emplace<PhysicsDefinition>(bullet, PhysicsDefinition {bodyDef, fixtureDef, shape});
+
+    //Visuals
+    auto imageEntity = registry->create();
+    registry->emplace<SpriteDefinition>(imageEntity, SpriteDefinition {
+            .spriteName =  "bullet", .initialOrder =  0, .pivot = Vector2{0.780, 0.5},
+            .useCustomDimensions = true, .customWidth = size * 11.3f, .customHeight = size * 4.3f,
+    });
+
+    registry->emplace<WorldPosition>(imageEntity, WorldPosition {bulletPos});
+    registry->emplace<LocalPosition>(imageEntity, LocalPosition{Vector2(0,0)});
+    registry->emplace<Rotation>(imageEntity, Rotation{angle});
+    registry->emplace<LocalRotation>(imageEntity, LocalRotation{0});
+
+    EntityRelationSystem::Assign(registry, bullet, imageEntity);
+}
+
+void PlayerShootSystem::CreateMuzzleFlash(entt::entity shooter, entt::registry *registry, const Vector2 pos, const float angle, ShootAbility data) {
+    auto existingMuzzle = registry->try_get<MuzzleFlash>(shooter);
+    if (existingMuzzle != nullptr){
+        Tween::ResetTime(registry, existingMuzzle->opacityTween);
+        Tween::ResetTime(registry, existingMuzzle->scaleTween);
+        float time = existingMuzzle->totalTime;
+        registry->patch<MuzzleFlash>(shooter, [time](MuzzleFlash &flash){ flash.timer = time; });
+        return;
+    }
+
+    auto muzzle = registry->create();
+    registry->emplace<SpriteDefinition>(muzzle, SpriteDefinition {
+            .spriteName =  "muzzle-flash", .initialOrder =  10, .pivot = Vector2{0.142f, 0.5f},
+            .useCustomDimensions = true, .customWidth = 163.f, .customHeight = 90.f
+    });
+
+    float animateTime = .6f;
+
+    registry->emplace<DebugName>(muzzle, DebugName{"Muzzle"});
+    registry->emplace<WorldPosition>(muzzle, WorldPosition {pos});
+    registry->emplace<LocalPosition>(muzzle, LocalPosition{Vector2(0,0)});
+    registry->emplace<Rotation>(muzzle, Rotation{angle});
+    registry->emplace<LocalRotation>(muzzle, LocalRotation{0});
+
+    auto opacityTween = Tween::Opacity(registry, muzzle, 1, 0, animateTime)
+            .SetEase(Ease::Type::OutQuint)
+            ->GetEntity();
+
+    auto scaleTween = Tween::Scale(registry, muzzle, Vector2{1, 1}, Vector2{0, 0.3f}, animateTime)
+            .SetEase(Ease::Type::OutQuint)
+            ->GetEntity();
+
+    registry->emplace<MuzzleFlash>(shooter, MuzzleFlash{ animateTime, animateTime, muzzle, opacityTween, scaleTween});
+
+
+    EntityRelationSystem::Assign(registry, shooter, muzzle);
 }
