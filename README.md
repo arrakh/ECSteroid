@@ -1,9 +1,10 @@
 # ECSTeroid
 an Asteroid game using ECS, developed using C++, EnTT, Box2D, and SFML libraries. This project was built with careful consideration of efficient and scalable design principles, while also maintaining code readability and simplicity in changing or adding new content to the game.
 
-# Features
+# About
 ### Game
-To Be Added
+Dodge and destroy as many asteroids as you can!
+Press **[SPACE]** to shoot, and press **[WASD]** to move! 
 
 ### Engine
 - Simple Event System
