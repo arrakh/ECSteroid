@@ -15,6 +15,8 @@
 #include "../systems/tween/TweenSystems.h"
 #include "../systems/ui/SFMLButtonDebugDrawSystem.h"
 #include "../systems/tween/SFMLTweenSystems.h"
+#include "../systems/ui/MainMenuUIBackgroundSystem.h"
+#include "../systems/MainMenuBGMSystem.h"
 
 void MenuScene::RegisterSystems(SystemsHandler *handle) {
     Tween::RegisterSystems(handle);
@@ -23,11 +25,13 @@ void MenuScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new EntityRelationSystem());
     handle->Register(new SFMLButtonSystem());
     handle->Register(new SFMLButtonStatesSpriteSystem());
-    handle->Register(new SFMLButtonDebugDrawSystem());
+    //handle->Register(new SFMLButtonDebugDrawSystem());
     handle->Register(new SFMLRenderSystem());
     handle->Register(new SFMLSpriteSystem());
     handle->Register(new SFMLTextSystem());
 
+    handle->Register(new MainMenuBGMSystem());
+    handle->Register(new MainMenuUIBackgroundSystem());
     handle->Register(new MainMenuUISystem());
 }
 

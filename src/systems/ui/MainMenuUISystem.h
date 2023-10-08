@@ -25,6 +25,7 @@ protected:
 
 private:
     void CreateMainMenuButton(entt::registry *registry, Vector2 position, std::string text, std::function<void()> callback);
+    void CreateTitle(entt::registry *registry);
     void Quit();
     void Play();
 

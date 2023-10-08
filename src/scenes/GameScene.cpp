@@ -43,6 +43,7 @@
 #include "../systems/ui/SFMLTextSystem.h"
 #include "../systems/tween/TweenSystems.h"
 #include "../systems/tween/SFMLTweenSystems.h"
+#include "../systems/TempMuzzleFlashSystem.h"
 
 void GameScene::RegisterSystems(SystemsHandler *handle) {
 
@@ -50,6 +51,7 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     Tween::RegisterSFMLSystems(handle);
 
     handle->Register(new EntityRelationSystem());
+    handle->Register(new TempMuzzleFlashSystem()); //this is temp system because Entity Relation System broke
     handle->Register(new SFMLButtonSystem());
     handle->Register(new SFMLButtonStatesSpriteSystem());
     handle->Register(new WaveSystem());
@@ -60,7 +62,7 @@ void GameScene::RegisterSystems(SystemsHandler *handle) {
     handle->Register(new SFMLRenderSystem());
     handle->Register(new SFMLSpriteSystem());
     handle->Register(new SFMLTextSystem());
-    handle->Register(new Box2DDebugDrawSystem());
+    //handle->Register(new Box2DDebugDrawSystem());
     handle->Register(new WrapAroundSystem());
     handle->Register(new PlayerShootSystem());
     handle->Register(new BulletLifetimeSystem());
@@ -92,6 +94,7 @@ void GameScene::OnStart() {
 }
 
 void GameScene::OnUpdate() {
+    return;
     ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_FirstUseEver);
 
     static bool windowOpen;
@@ -138,8 +141,8 @@ void GameScene::CreatePlayer() {
     registry.emplace<Health>(player, Health{200.f});
 
     registry.emplace<ShootAbility>(player, ShootAbility {
-        .startDistance = size.x / 2.f + 50.f,  .cooldown = 0.2f,
-        .bulletSpeed = 1200.f, .bulletLifetime = 1.2f, .bulletDamage = 15.f
+        .startDistance = size.x / 2.f + 50.f,  .cooldown = 0.1f,
+        .bulletSpeed = 1500.f, .bulletLifetime = 1.2f, .bulletDamage = 8.f
     });
 
     b2BodyDef bodyDef;

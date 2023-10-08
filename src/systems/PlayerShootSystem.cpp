@@ -25,17 +25,18 @@
 #include "../components/MuzzleFlash.h"
 #include "../util/Tweens.h"
 #include "../components/debug/DebugName.h"
+#include "../events/ShootEvent.h"
 
 void PlayerShootSystem::Update(entt::registry *registry) {
 
-    auto muzzles = registry->view<MuzzleFlash>();
+    /*auto muzzles = registry->view<MuzzleFlash>();
     for (auto [entity, muzzle] : muzzles.each()) {
         muzzle.timer -= Time::deltaTime();
         if (muzzle.timer > 0) continue;
         registry->remove<MuzzleFlash>(entity);
         std::cout << "WILL DESTROY " << DebugName::Get(registry, muzzle.muzzleEntity) << "\n";
         registry->destroy(muzzle.muzzleEntity);
-    }
+    }*/
 
     auto cooldown = registry->view<ShootAbilityCooldown>();
     for (auto [entity, cooldownData] : cooldown.each()) {
@@ -51,6 +52,8 @@ void PlayerShootSystem::Update(entt::registry *registry) {
 
         CreateBullet(entity, registry, pos.vector, rot.value, shootData);
         //CreateMuzzleFlash(entity, registry, pos.vector, rot.value, shootData);
+
+        publisher->Publish(ShootEvent(registry, entity, pos.vector, rot.value, shootData));
     }
 }
 

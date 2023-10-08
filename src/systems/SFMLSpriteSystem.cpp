@@ -47,6 +47,8 @@ void SFMLSpriteSystem::Update(entt::registry *registry) {
             }
         }
 
+        sprite.setColor(sf::Color{def.red, def.green, def.blue, def.alpha});
+
         auto spritePtr = std::make_shared<sf::Sprite>(sprite);
 
         registry->emplace<SFMLSprite>(entity, SFMLSprite { spritePtr, Vector2{sprite.getScale()}});

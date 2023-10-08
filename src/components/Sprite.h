@@ -20,6 +20,11 @@ struct SpriteDefinition {
     const bool tiled = false;
     const float tiledScaleX = 1.f;
     const float tiledScaleY = 1.f;
+
+    const uint8 red = 255;
+    const uint8 green = 255;
+    const uint8 blue = 255;
+    const uint8 alpha = 255;
 };
 
 

@@ -19,6 +19,5 @@ void TweenTimerSystem::FinalUpdate(entt::registry *registry) {
     for (auto [entity, timer] : timers.each()) {
         if (timer.currentTime < timer.totalTime) continue;
         registry->destroy(entity);
-        std::cout << "Tween finished!!\n";
     }
 }

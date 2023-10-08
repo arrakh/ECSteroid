@@ -67,12 +67,43 @@ void AsteroidSpawnerSystem::OnAsteroidDestroyed(entt::registry &registry, entt::
     }
 }
 
+struct AsteroidSprite {
+    std::string name;
+    float minimumSize;
+    float spriteSizeMultiplier;
+};
+
+AsteroidSprite definitions[5] = {
+        AsteroidSprite {"asteroid-tiny-1", 0, 2.8f },
+        AsteroidSprite {"asteroid-small-1", 25, 2.f },
+        AsteroidSprite {"asteroid-medium-2", 33, 1.75f },
+        AsteroidSprite {"asteroid-medium-1", 50, 1.5f },
+        AsteroidSprite {"asteroid-large-1", 100, 1.5f },
+};
+
+AsteroidSprite GetSpriteDefinition(float size){
+    AsteroidSprite def = definitions[0];
+
+    for (int i = 1; i < 5; ++i) {
+        //std::cout << "Checking if " << size << " is smaller than " << definitions[i].minimumSize << "\n";
+        if (definitions[i].minimumSize > size) return def;
+        def = definitions[i];
+    }
+
+    return def;
+}
+
 void AsteroidSpawnerSystem::CreateAsteroid(entt::registry *registry, const CreateAsteroidParameter param) {
     auto asteroid = registry->create();
+    auto size = param.definition.size;
+    auto spriteDef = GetSpriteDefinition(size);
+    auto spriteSize = size * spriteDef.spriteSizeMultiplier;
+
+    //std::cout << "Spawning asteroid size " << size << " with sprite " << spriteDef.name << "\n";
 
     registry->emplace<SpriteDefinition>(asteroid, SpriteDefinition {
-            .spriteName =  "asteroid-medium-2", .initialOrder =  0,
-            .useCustomDimensions = true, .customWidth = param.definition.size, .customHeight = param.definition.size
+            .spriteName =  spriteDef.name, .initialOrder =  0,
+            .useCustomDimensions = true, .customWidth = spriteSize , .customHeight = spriteSize
     });
 
     registry->emplace<Box2DDebugDefinition>(asteroid, Box2DDebugDefinition { sf::Color::Green, 1.f});
@@ -104,5 +135,14 @@ void AsteroidSpawnerSystem::CreateAsteroid(entt::registry *registry, const Creat
     fixtureDef.userData.pointer = static_cast<std::uintptr_t>(asteroid);
 
     registry->emplace<PhysicsDefinition>(asteroid, PhysicsDefinition {bodyDef, fixtureDef, shape});
+}
+
+void AsteroidSpawnerSystem::Load(entt::registry *registry) {
+    int len = std::size(definitions);
+    std::sort(definitions, definitions + len, [](AsteroidSprite &s1, AsteroidSprite &s2) { return s1.minimumSize < s2.minimumSize; });
+}
+
+void AsteroidSpawnerSystem::Unload() {
+
 }
 

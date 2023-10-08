@@ -46,6 +46,24 @@ void MainMenuUISystem::CreateMainMenuButton(entt::registry *registry, Vector2 po
 
 }
 
+void MainMenuUISystem::CreateTitle(entt::registry *registry) {
+    auto title = registry->create();
+    registry->emplace<SpriteDefinition>(title, SpriteDefinition {
+            .spriteName =  "title-glow", .initialOrder =  100
+    });
+
+
+    registry->emplace<WorldPosition>(title, WorldPosition {Vector2 {0, -200} });
+
+    registry->emplace<SFMLViewTarget>(title, SFMLViewTarget{&uiView});
+
+    Tween::PositionOffset(registry, title, Vector2{0,-500}, Vector2{0, 0}, 4.f)
+            .SetEase(Ease::Type::OutCubic);
+
+    Tween::Opacity(registry, title, 0, 1, 3.f)
+            .SetEase(Ease::Type::OutCubic);
+}
+
 void MainMenuUISystem::Quit() {
     sfWindow->windowPtr->close();
 }
@@ -61,6 +79,7 @@ void MainMenuUISystem::OnLoad(entt::registry *registry) {
 
     CreateMainMenuButton(registry, Vector2 {0, 100}, "Play", [this](){ this->Play();});
     CreateMainMenuButton(registry, Vector2 {0, 250}, "Quit", [this](){ this->Quit();});
+    CreateTitle(registry);
 }
 
 void MainMenuUISystem::OnUnload() {
